@@ -11,13 +11,15 @@ int main() {
     while(window.isOpen()){
         sf::Event event{};
         while(window.pollEvent(event)){
-            player.move();
             if(event.type == sf::Event::Closed){
                 window.close();
             }
         }
+        player.move();
+        map.checkCollisions(player);
         map.moveBackground();
         map.moveLand();
+        map.moveGrass();
         window.clear(sf::Color::Blue);
         map.draw(window);
         player.draw(window);
