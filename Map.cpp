@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "CONSTANTS.h"
 #include "Yoshi.h"
+#include <random>
 
 
 Map::Map() {
@@ -61,6 +62,8 @@ void Map::draw(sf::RenderWindow &window){
         window.draw(j);
     for (auto k : grassSprites)
         window.draw(k);
+    for (auto l : obstacles)
+        l->draw(window);
 }
 
 
@@ -69,7 +72,7 @@ void Map::moveBackground() {
         float movement = INIT_SPEEDB;
         backgroundSprites.at(i).move(-movement,0.0f);
         if (backgroundSprites.at(i).getPosition().x <= 0 - backgroundSprites.at(i).getLocalBounds().width * backgroundSprites.at(i).getScale().x){
-            sf::Vector2f position(backgroundSprites.at((i+1)%backgroundSprites.size()).getPosition().x
+            sf::Vector2f position(backgroundSprites.at((i+1)%backgroundSprites.size()).getPosition().x - 1
                     + backgroundSprites.at((i+1)%backgroundSprites.size()).getLocalBounds().width * backgroundSprites.at((i+1)%backgroundSprites.size()).getScale().x - 1, 0.0f);
             backgroundSprites.at(i).setPosition(position);
         }
@@ -82,7 +85,7 @@ void Map::moveLand() {
         float movement =INIT_SPEEDL;
         landSprites.at(j).move(-movement, 0);
         if (landSprites.at(j).getPosition().x <= 0 - landSprites.at(j).getLocalBounds().width * landSprites.at(j).getScale().x){
-           sf::Vector2f position(landSprites.at((j+1)%landSprites.size()).getPosition().x
+           sf::Vector2f position(landSprites.at((j+1)%landSprites.size()).getPosition().x - 2
                     + landSprites.at((j+1)%landSprites.size()).getLocalBounds().width * landSprites.at((j+1)%landSprites.size()).getScale().x-1, LHEIGHT);
            landSprites.at(j).setPosition(position);
         }
@@ -108,3 +111,25 @@ void Map::checkCollisions(Yoshi& player) {
     if (player.getPosition().y + player.getGlobalBounds().height  > LHEIGHT + 2)
         player.setPosition(player.getPosition().x, LHEIGHT - player.getGlobalBounds().height + 2);
 }
+
+void Map::moveObstacle() {
+    float movement =INIT_SPEEDL;
+for (int j = 0; j < obstacles.size(); j++)
+    obstacles.at(j)->move(-movement, 0);
+for (auto i:obstacles){
+    i->doAction();
+}
+}
+
+void Map::instantiateObstacle() {
+    int rndm=rand()%100;
+    Obstacle* tmp;
+    if (rndm < 50) {
+        tmp = stoneFactory.factoryMethod();
+    }
+    else {
+        tmp = rocketFactory.factoryMethod();
+    }
+    obstacles.push_back(tmp);
+}
+

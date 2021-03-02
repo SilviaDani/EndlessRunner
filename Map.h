@@ -7,6 +7,8 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "Yoshi.h"
+#include "Obstacle.h"
+#include "ObstacleFactory.h"
 
 
 class Map {
@@ -17,6 +19,8 @@ public:
     void moveLand();
     void moveGrass();
     void checkCollisions(Yoshi& player);
+    void moveObstacle();
+    void instantiateObstacle();
 private:
     sf::Texture backgroundTexture;
     std::vector <sf::Sprite>backgroundSprites;
@@ -24,6 +28,9 @@ private:
     std::vector <sf::Sprite>landSprites;
     sf::Texture grassTexture;
     std::vector <sf::Sprite>grassSprites;
+    std::vector <Obstacle*>obstacles;
+    StoneFactory stoneFactory;
+    RocketFactory rocketFactory;
 };
 
 

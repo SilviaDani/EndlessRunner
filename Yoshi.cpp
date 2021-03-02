@@ -21,9 +21,9 @@ window.draw(sprite);
 
 void Yoshi::move() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        sprite.move(0, -2.1);
+        sprite.move(0, -3.2);
     else
-        sprite.move(0, 2.5);
+        sprite.move(0, 3.6);
 }
 
 sf::Vector2f Yoshi::getPosition() {
