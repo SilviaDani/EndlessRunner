@@ -6,7 +6,7 @@
 #define ENDLESSRUNNER_MAP_H
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "Yoshi.h"
+#include "Player.h"
 #include "Obstacle.h"
 #include "ObstacleFactory.h"
 
@@ -18,9 +18,10 @@ public:
     void moveBackground();
     void moveLand();
     void moveGrass();
-    void checkCollisions(Yoshi& player);
+    void checkCollisions(Player& player);
     void moveObstacle();
     void instantiateObstacle();
+    void movePowerUp();
 private:
     sf::Texture backgroundTexture;
     std::vector <sf::Sprite>backgroundSprites;
@@ -31,6 +32,8 @@ private:
     std::vector <Obstacle*>obstacles;
     StoneFactory stoneFactory;
     RocketFactory rocketFactory;
+    sf:: Texture powerUpTexture;
+    std::vector <sf::Sprite>powerUpSprite;
 };
 
 

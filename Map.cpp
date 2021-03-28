@@ -5,7 +5,7 @@
 #include <iostream>
 #include "Map.h"
 #include "CONSTANTS.h"
-#include "Yoshi.h"
+#include "Player.h"
 #include <random>
 
 
@@ -14,7 +14,7 @@ Map::Map() {
             //TODO handle exception
         }
 
-        sf::Sprite bgSprite1, bgSprite2, lSprite1, lSprite2, gSprite1, gSprite2;
+        sf::Sprite bgSprite1, bgSprite2, lSprite1, lSprite2, gSprite1, gSprite2, pSprite;
         bgSprite1.setTexture(backgroundTexture);
         bgSprite2.setTexture(backgroundTexture);
         double bgScale = static_cast<double>(SCREENWIDTH)/backgroundTexture.getSize().x;
@@ -51,6 +51,14 @@ Map::Map() {
         grassSprites.push_back(gSprite1);
         grassSprites.push_back(gSprite2);
 
+        if (!powerUpTexture.loadFromFile("../Sprites/block.png")) {
+        //TODO handle exception
+        }
+        pSprite.setTexture(powerUpTexture);
+        pSprite.setPosition(SCREENWIDTH + 2, SCREENHEIGHT/6);
+        pSprite.setScale(2.5,2.5);
+        powerUpSprite.push_back(pSprite);
+
 
 
 }
@@ -64,6 +72,8 @@ void Map::draw(sf::RenderWindow &window){
         window.draw(k);
     for (auto l : obstacles)
         l->draw(window);
+    for (auto m : powerUpSprite)
+        window.draw(m);
 }
 
 
@@ -105,11 +115,23 @@ void Map::moveGrass() {
 }
 
 
-void Map::checkCollisions(Yoshi& player) {
+void Map::checkCollisions(Player& player) {
     if (player.getPosition().y < 0)
         player.setPosition(player.getPosition().x, 0.0f);
     if (player.getPosition().y + player.getGlobalBounds().height  > LHEIGHT + 2)
         player.setPosition(player.getPosition().x, LHEIGHT - player.getGlobalBounds().height + 2);
+    for (auto k : powerUpSprite){
+        if (player.getGlobalBounds().intersects(k.getGlobalBounds())) {
+            std::cout << "power up" << std::endl;
+            powerUpSprite.pop_back();
+            player.changeForm();
+        }
+    }
+    for (auto i : obstacles) {
+        if (player.getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())) {
+            std::cerr << "sei morto" << std::endl;
+        }
+    }
 }
 
 void Map::moveObstacle() {
@@ -131,5 +153,10 @@ void Map::instantiateObstacle() {
         tmp = rocketFactory.factoryMethod();
     }
     obstacles.push_back(tmp);
+}
+
+void Map::movePowerUp() {
+    for (int m = 0; m < powerUpSprite.size(); m++)
+        powerUpSprite.at(m).move(-INIT_SPEEDL,0);
 }
 
