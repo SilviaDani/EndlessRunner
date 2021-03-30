@@ -53,18 +53,17 @@ void Stone::doAction() {
         isFalling = true;
         hasTouchedGround = false;
     }
-    if (isFalling){
+    if (isFalling){ //TODO mettere condizioni più stringenti sugli if
         if (obstacleSprite.getPosition().y < LHEIGHT - obstacleSprite.getGlobalBounds().height && !hasTouchedGround)
             obstacleSprite.move(0, 5);
         else if (obstacleSprite.getPosition().y > startingPosition.y + 2)
-            obstacleSprite.move(0, -2);
+            obstacleSprite.move(0, - 2);
         else if (obstacleSprite.getPosition().y < startingPosition.y) {
             isFalling = false;
             clock.restart();
         }
         if (obstacleSprite.getPosition().y >= LHEIGHT - obstacleSprite.getGlobalBounds().height )
             hasTouchedGround = true;
-
     }
 }
 

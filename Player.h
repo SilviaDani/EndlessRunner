@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #ifndef ENDLESSRUNNER_YOSHI_H
 #define ENDLESSRUNNER_YOSHI_H
+#include "CONSTANTS.h"
 
 class Form;
 class Player{
@@ -33,18 +34,21 @@ public:
 
 class Yoshi : public Form{
 public:
-    Yoshi();
+
+    Yoshi(float y = LHEIGHT + 500);
     void move() override;
     Form* nextForm() override;
 };
 
 class Bike : public Form{
 public:
-    Bike();
+    Bike(float y);
     void move() override;
     Form* nextForm() override;
 private:
     bool isJumping = false;
+    bool hasReachedTop = false;
+    bool hasTouchedGround = false;
 };
 
 #endif //ENDLESSRUNNER_YOSHI_H

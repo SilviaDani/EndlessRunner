@@ -43,7 +43,7 @@ void Player::changeForm() {
 }
 
 
-Yoshi::Yoshi() {
+Yoshi::Yoshi(float y) {
     if (!texture.loadFromFile("../Sprites/yoshi.png")) {
         //TODO handle exception
     }
@@ -64,32 +64,40 @@ Form *Yoshi::nextForm() {
     int dice = rand()%1; //TODO %n n numero di classi figlie di form - 1(perchè c'è yoshi)
     switch (dice) {
         case 0:
-            next = new Bike();
+            next = new Bike(sprite.getPosition().y);
             break;
     }
     return next;
 }
 
-Bike::Bike() {
+Bike::Bike(float y) {
     if (!texture.loadFromFile("../Sprites/yoshibike.png")) {
         //TODO handle exception
     }
     sprite.setTexture(texture);
-    sprite.setPosition(200, LHEIGHT - sprite.getGlobalBounds().height + 2);
+    sprite.setPosition(200, y);
     sprite.setScale(3,3);
     // TODO regolare setPosition in modo che parta da dove ha preso il power up
 }
 
-void Bike::move() { //TODO correggi codice
-    if (!isJumping && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
-        std::cout<<"yyyyyyyyyyyyyyyyy"<<std::endl;
-        if (sprite.getPosition().y > MAXJUMP) {
+void Bike::move() { //TODO mettere condizioni più stringenti sugli if
+    if (sprite.getPosition().y > LHEIGHT - sprite.getGlobalBounds().height - 2)
+        hasTouchedGround = true;
+    if (!hasTouchedGround)
+        sprite.move(0, 8);
+    if (!isJumping && sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && hasTouchedGround) {
+        isJumping = true;
+        hasReachedTop = false;
+    }
+    if (isJumping) {
+        if (sprite.getPosition().y > MAXJUMP && !hasReachedTop)
             sprite.move(0, -4);
-           // isJumping = true;
-        }
-        else if (sprite.getPosition().y <= MAXJUMP)
+        else if (sprite.getPosition().y < LHEIGHT - sprite.getGlobalBounds().height - 2) {
+            hasReachedTop = true;
             sprite.move(0, 4);
-
+        }
+        else if (sprite.getPosition().y >= LHEIGHT - sprite.getGlobalBounds().height - 2)
+            isJumping = false;
     }
 }
 
