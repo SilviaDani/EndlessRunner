@@ -4,9 +4,9 @@
 
 #include <iostream>
 #include "Map.h"
-#include "CONSTANTS.h"
 #include "Player.h"
 #include <random>
+#include "Game.h"
 
 
 Map::Map() {
@@ -58,9 +58,6 @@ Map::Map() {
         pSprite.setPosition(SCREENWIDTH + 2, SCREENHEIGHT/6);
         pSprite.setScale(2.5,2.5);
         powerUpSprite.push_back(pSprite);
-
-
-
 }
 
 void Map::draw(sf::RenderWindow &window){
@@ -116,10 +113,18 @@ void Map::moveGrass() {
 
 
 void Map::checkCollisions(Player& player) {
-    if (player.getPosition().y < 0)
-        player.setPosition(player.getPosition().x, 0.0f);
-    if (player.getPosition().y + player.getGlobalBounds().height  > LHEIGHT + 2)
-        player.setPosition(player.getPosition().x, LHEIGHT - player.getGlobalBounds().height + 2);
+    if (Giant* form = dynamic_cast<Giant*>(player.form)){
+        if (player.getPosition().y - (player.getGlobalBounds().height)/2 < 0)
+            player.setPosition(player.getPosition().x, (player.getGlobalBounds().height)/2);
+        if (player.getPosition().y + (player.getGlobalBounds().height)/2  > LHEIGHT + 2)
+            player.setPosition(player.getPosition().x, LHEIGHT - (player.getGlobalBounds().height)/2 + 2);
+    }
+    else{
+        if (player.getPosition().y < 0)
+            player.setPosition(player.getPosition().x, 0.0f);
+        if (player.getPosition().y + player.getGlobalBounds().height  > LHEIGHT + 2)
+            player.setPosition(player.getPosition().x, LHEIGHT - player.getGlobalBounds().height + 2);
+    }
     for (auto k : powerUpSprite){
         if (player.getGlobalBounds().intersects(k.getGlobalBounds())) {
             std::cout << "power up" << std::endl;
@@ -128,31 +133,45 @@ void Map::checkCollisions(Player& player) {
         }
     }
     for (auto i : obstacles) {
+        Giant* form = dynamic_cast<Giant*>(player.form);
         if (player.getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())) {
-            std::cerr << "sei morto" << std::endl;
+            if (form) {
+                std::cerr << "hai parato un missile" << std::endl;
+                obstacles.pop_back();
+            }
+            else {
+                if (Yoshi *formy = dynamic_cast<Yoshi *>(player.form))
+                    std::cerr << "sei morto" << std::endl;
+                else
+                    player.changeForm(); //TODO implementa codice per vivere se pari i missili da gigante
+                for (auto k : obstacles)
+                    obstacles.pop_back();
+            }
+
         }
+
     }
 }
 
 void Map::moveObstacle() {
     float movement =INIT_SPEEDL;
-for (int j = 0; j < obstacles.size(); j++)
-    obstacles.at(j)->move(-movement, 0);
-for (auto i:obstacles){
-    i->doAction();
-}
+    for (int j = 0; j < obstacles.size(); j++)
+        obstacles.at(j)->move(-movement, 0);
+    for (auto i:obstacles){
+        i->doAction();
+    }
 }
 
 void Map::instantiateObstacle() {
-    int rndm=rand()%100;
     Obstacle* tmp;
-    if (rndm < 50) {
-        tmp = stoneFactory.factoryMethod();
-    }
-    else {
+    int rndm = rand() % 100;
+    Giant* form = dynamic_cast<Giant*>(Game::getInstance()->player.form);
+    if (rndm < 50 || form)
         tmp = rocketFactory.factoryMethod();
-    }
+    else
+        tmp = stoneFactory.factoryMethod();
     obstacles.push_back(tmp);
+
 }
 
 void Map::movePowerUp() {

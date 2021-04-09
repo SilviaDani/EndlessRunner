@@ -21,13 +21,13 @@ protected:
 
 class Stone: public Obstacle{
 public:
- Stone();
- void doAction() override;
+    Stone();
+    void doAction() override;
 private:
- sf::Clock clock;
- sf::Vector2f startingPosition;
- bool isFalling = false;
- bool hasTouchedGround = false;
+    sf::Clock clock;
+    sf::Vector2f startingPosition;
+    bool isFalling = false;
+    bool hasTouchedGround = false;
 };
 
 class Rocket: public Obstacle{

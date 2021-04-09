@@ -22,21 +22,21 @@ public:
 class Form{
 public:
     virtual void move() = 0;
+    virtual void draw(sf::RenderWindow &window) = 0;
     virtual Form* nextForm() = 0;
     virtual ~Form() = default;
     void setPosition(float x, float y);
+    const sf::Sprite &getSprite() const;
 protected:
     sf:: Texture texture;
     sf:: Sprite sprite;
-public:
-    const sf::Sprite &getSprite() const;
 };
 
 class Yoshi : public Form{
 public:
-
-    Yoshi(float y = LHEIGHT + 500);
+    Yoshi(float y = LHEIGHT + 500); //TODO settare la posizione post mortem con power up
     void move() override;
+    void draw(sf::RenderWindow &window) override;
     Form* nextForm() override;
 };
 
@@ -44,6 +44,7 @@ class Bike : public Form{
 public:
     Bike(float y);
     void move() override;
+    void draw(sf::RenderWindow &window) override;
     Form* nextForm() override;
 private:
     bool isJumping = false;
@@ -51,4 +52,16 @@ private:
     bool hasTouchedGround = false;
 };
 
+class Giant : public Form{
+public:
+    Giant(float y);
+    void move() override;
+    void draw(sf::RenderWindow &window) override;
+    Form* nextForm() override;
+private:
+    sf:: Texture bodyTexture;
+    sf:: Sprite bodySprite;
+    sf:: Texture tongueTexture;
+    sf:: Sprite tongueSprite;
+};
 #endif //ENDLESSRUNNER_YOSHI_H
