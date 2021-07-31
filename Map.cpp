@@ -113,7 +113,13 @@ void Map::moveGrass() {
 
 
 void Map::checkCollisions(Player& player) {
-    if (Giant* form = dynamic_cast<Giant*>(player.form)){
+    if (Giant* form = dynamic_cast<Giant*>(player.form)){ //TODO cambia i limiti del gigante
+        if (player.getPosition().y - (player.getGlobalBounds().height)/2 < 0)
+            player.setPosition(player.getPosition().x, (player.getGlobalBounds().height)/2);
+        if (player.getPosition().y + (player.getGlobalBounds().height)  > LHEIGHT + 2)
+            player.setPosition(player.getPosition().x, LHEIGHT - (player.getGlobalBounds().height) + 2);
+    }
+    else if (GravityInverter* form = dynamic_cast<GravityInverter*>(player.form)){
         if (player.getPosition().y - (player.getGlobalBounds().height)/2 < 0)
             player.setPosition(player.getPosition().x, (player.getGlobalBounds().height)/2);
         if (player.getPosition().y + (player.getGlobalBounds().height)/2  > LHEIGHT + 2)
@@ -140,16 +146,17 @@ void Map::checkCollisions(Player& player) {
                 obstacles.pop_back();
             }
             else {
-                if (Yoshi *formy = dynamic_cast<Yoshi *>(player.form))
+                if (Yoshi *form = dynamic_cast<Yoshi *>(player.form)) {
+                    player.kill();
+                    notify(player, Event::EVENT_DEATH);
                     std::cerr << "sei morto" << std::endl;
+                }
                 else
                     player.changeForm(); //TODO implementa codice per vivere se pari i missili da gigante
                 for (auto k : obstacles)
                     obstacles.pop_back();
             }
-
         }
-
     }
 }
 
@@ -157,7 +164,7 @@ void Map::moveObstacle() {
     float movement =INIT_SPEEDL;
     for (int j = 0; j < obstacles.size(); j++)
         obstacles.at(j)->move(-movement, 0);
-    for (auto i:obstacles){
+    for (auto i : obstacles){
         i->doAction();
     }
 }

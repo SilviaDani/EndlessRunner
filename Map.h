@@ -9,9 +9,10 @@
 #include "Player.h"
 #include "Obstacle.h"
 #include "ObstacleFactory.h"
+#include "Subject.h"
 
 
-class Map {
+class Map : public Subject {
 public:
     Map();
     void draw(sf::RenderWindow &window);

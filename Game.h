@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Player.h"
 #include "Map.h"
+#include "Achievement.h"
 
 class Game {
 public:
@@ -14,11 +15,13 @@ public:
     Player player;
     Map map;
     sf::Clock clock;
+    sf::Window* window;
     void update();
     void draw(sf::RenderWindow &window);
 private:
     Game();
-static Game* instance;
+    static Game* instance;
+    AchievementManager* am;
 
 };
 

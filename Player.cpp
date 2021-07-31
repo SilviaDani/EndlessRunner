@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Player.h"
 #include "CONSTANTS.h"
+#include "Game.h"
 #include <math.h>
 
 Player::Player() {
@@ -17,7 +18,6 @@ const sf::Sprite &Form::getSprite() const {
 void Player::draw(sf::RenderWindow &window) {
 form->draw(window);
 }
-
 
 sf::Vector2f Player::getPosition() {
     return form->getSprite().getPosition();
@@ -43,6 +43,15 @@ void Player::changeForm() {
     form = form->nextForm();
 }
 
+bool Player::isAlive() const {
+    return alive;
+}
+
+void Player::kill() {
+    Player::alive = false;
+}
+
+
 Yoshi::Yoshi(float y) {
     if (!texture.loadFromFile("../Sprites/yoshi.png")) {
         //TODO handle exception
@@ -67,11 +76,14 @@ Form *Yoshi::nextForm() {
     Form* next = nullptr;
     int dice = rand()%1; //TODO %n n numero di classi figlie di form - 1(perchè c'è yoshi)
     switch (dice) {
-        /*case 0:
+      /*  case 0:
             next = new Bike(sprite.getPosition().y);
-            break;*/
-        case 0:
+            break;
+        case 1:
             next = new Giant(sprite.getPosition().y);
+            break; */
+        case 0:
+            next = new GravityInverter(sprite.getPosition().y);
             break;
     }
     return next;
@@ -118,13 +130,6 @@ Form *Bike::nextForm() {
 
 
 Giant::Giant(float y) {
-    if (!texture.loadFromFile("../Sprites/yoshitongue.png")) {
-        //TODO handle exception
-    }
-    sprite.setTexture(texture);
-    sprite.setPosition(300, y);
-    sprite.setOrigin((sprite.getGlobalBounds().width)/2, (sprite.getGlobalBounds().height)/2);
-    sprite.setScale(0.4,0.4);
 
     if (!bodyTexture.loadFromFile("../Sprites/bigyoshi.png")) {
         //TODO handle exception
@@ -141,14 +146,36 @@ Giant::Giant(float y) {
     tongueSprite.setOrigin(0, (tongueSprite.getLocalBounds().height)/2);
     tongueSprite.setScale(1, 0.5);
     tongueSprite.setPosition((bodySprite.getGlobalBounds().width)/2 - 8, bodySprite.getPosition().y - (bodySprite.getGlobalBounds().height)/2 + 4);
+
+    if (!texture.loadFromFile("../Sprites/yoshitongue.png")) {
+        //TODO handle exception
+    }
+    sprite.setTexture(texture);
+    sprite.setScale(0.4,0.4);
+    startingPosition = sf::Vector2f ((bodySprite.getGlobalBounds().width)/2 + (tongueSprite.getGlobalBounds().width)*
+                                                                                  sin(acos((LHEIGHT-(sprite.getGlobalBounds().height)/2 - (bodySprite.getPosition().y -
+                                                                                                                                           (bodySprite.getGlobalBounds().height)/2 + 4))/tongueSprite.getGlobalBounds().width)) -65, LHEIGHT - sprite.getGlobalBounds().height);
+    sprite.setPosition(startingPosition);
 }
 
 void Giant::move() {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        sprite.move(0, -2.5);
-    else
-        sprite.move(0, 3.6);
-    tongueSprite.setRotation(atan2((sprite.getPosition().y - tongueSprite.getPosition().y), (sprite.getPosition().x - tongueSprite.getPosition().x)) *180/M_PI);
+   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+          if(sprite.getPosition().y > bodySprite.getGlobalBounds().top + 100) {
+          sprite.setPosition(sprite.getPosition().x + (sprite.getPosition().y < bodySprite.getGlobalBounds().top + bodySprite.getGlobalBounds().height / 2 ? -0.5f : 0.5f),
+                             sprite.getPosition().y - 1.f);
+      }
+         }
+   else{
+       if(sprite.getPosition().y < LHEIGHT - sprite.getGlobalBounds().height - 0.5f) {
+           sprite.setPosition(sprite.getPosition().x + (sprite.getPosition().y < bodySprite.getGlobalBounds().top + bodySprite.getGlobalBounds().height / 2 ? 0.5f : -0.5f),
+                              sprite.getPosition().y + 1.f);
+       }else if(sprite.getPosition().y >= LHEIGHT - sprite.getGlobalBounds().height - 0.5f && sprite.getPosition().y < LHEIGHT - sprite.getGlobalBounds().height + 0.5f){
+           sprite.setPosition(startingPosition);
+       }
+   }
+
+//TODO AGGIUSTARE LO SPOSTAMENTO CIRCOLARE
+    tongueSprite.setRotation(atan2(((sprite.getPosition().y+sprite.getGlobalBounds().height/2) - tongueSprite.getPosition().y), (sprite.getPosition().x - tongueSprite.getPosition().x)) *180/M_PI);
 }
 
 void Giant::draw(sf::RenderWindow &window) {
@@ -160,3 +187,34 @@ void Giant::draw(sf::RenderWindow &window) {
 Form *Giant::nextForm() {
     return new Yoshi;
 }
+
+
+GravityInverter::GravityInverter(float y) {
+    if (!texture.loadFromFile("../Sprites/spaceyoshi.png")) {
+        //TODO handle exception
+    }
+    sprite.setTexture(texture);
+    sprite.setPosition(200, y);
+    sprite.setScale(0.3,0.3);
+    sprite.setOrigin(sprite.getOrigin().x, sprite.getOrigin().y + sprite.getLocalBounds().height/2);
+}
+
+void GravityInverter::move() {
+    sprite.move(0, gravity);
+}
+
+void GravityInverter::invertGravity() {
+    gravity *= -1;
+    sprite.setScale(sprite.getScale().x,-sprite.getScale().y);
+}
+
+void GravityInverter::draw(sf::RenderWindow &window) {
+    window.draw(sprite);
+}
+
+Form *GravityInverter::nextForm() {
+    return new Yoshi();
+}
+
+
+

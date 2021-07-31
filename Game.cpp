@@ -9,6 +9,8 @@ Game* Game::instance = nullptr;
 
 Game::Game() {
     clock.restart();
+    am = new AchievementManager();
+    map.addObserver(am);
 }
 
 Game* Game::getInstance(){
@@ -31,6 +33,7 @@ void Game::update() {
         clock.restart();
     }
     map.moveObstacle();
+
     //player.printPosition();
 }
 
@@ -38,4 +41,5 @@ void Game::draw(sf::RenderWindow &window) {
     map.draw(window);
     player.draw(window);
 }
+
 

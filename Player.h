@@ -17,6 +17,10 @@ public:
     sf::Rect<float> getGlobalBounds() const;
     void changeForm();
     Form* form = nullptr; //TODO make it private
+    bool isAlive() const;
+    void kill();
+protected:
+    bool alive = true;
 };
 
 class Form{
@@ -63,5 +67,17 @@ private:
     sf:: Sprite bodySprite;
     sf:: Texture tongueTexture;
     sf:: Sprite tongueSprite;
+    sf:: Vector2f startingPosition;
+};
+
+class GravityInverter : public Form{
+public:
+    GravityInverter(float y);
+    void move() override;
+    void draw(sf::RenderWindow &window) override;
+    Form* nextForm() override;
+    void invertGravity();
+private:
+    float gravity = 3.2;
 };
 #endif //ENDLESSRUNNER_YOSHI_H
