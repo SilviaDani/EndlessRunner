@@ -13,7 +13,13 @@ Map::Map() {
         if (!backgroundTexture.loadFromFile("../Sprites/yoshisbackground.png")) {
             //TODO handle exception
         }
-
+        if(!font.loadFromFile("../arial.ttf")){
+            //TODO handle exception
+        }
+        distance.setFont(font);
+        distance.setCharacterSize(24);
+        distance.setFillColor(sf::Color::Black);
+        clock.restart();
         sf::Sprite bgSprite1, bgSprite2, lSprite1, lSprite2, gSprite1, gSprite2, pSprite;
         bgSprite1.setTexture(backgroundTexture);
         bgSprite2.setTexture(backgroundTexture);
@@ -71,6 +77,11 @@ void Map::draw(sf::RenderWindow &window){
         l->draw(window);
     for (auto m : powerUpSprite)
         window.draw(m);
+    int coveredDistance = clock.getElapsedTime().asSeconds() * INIT_SPEEDL; //TODO aggiungi accelerazione
+    if(coveredDistance >= 100)
+        notify(Game::getInstance()->player, Event::EVENT_100DISTANCE);
+    distance.setString(std::to_string(coveredDistance));
+    window.draw(distance);
 }
 
 
@@ -182,7 +193,25 @@ void Map::instantiateObstacle() {
 }
 
 void Map::movePowerUp() {
-    for (int m = 0; m < powerUpSprite.size(); m++)
+    for (int m = 0; m < powerUpSprite.size(); m++){
         powerUpSprite.at(m).move(-INIT_SPEEDL,0);
+        if (powerUpSprite.at(m).getPosition().x < 0 - powerUpSprite.at(m).getGlobalBounds().width - 3)
+            powerUpSprite.pop_back();
+    }
+
+
+}
+
+void Map::instantiatePowerUp(Player& player) {
+    if (Yoshi* form = dynamic_cast<Yoshi*>(player.form)) {
+        if (form->getClock().getElapsedTime().asSeconds() >= 5) {
+            sf:: Sprite pSprite;
+            pSprite.setTexture(powerUpTexture);
+            pSprite.setPosition(SCREENWIDTH + 2, SCREENHEIGHT/6);
+            pSprite.setScale(2.5,2.5);
+            powerUpSprite.push_back(pSprite);
+            form->resetClock();
+        }
+    }
 }
 

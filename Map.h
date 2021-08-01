@@ -23,6 +23,7 @@ public:
     void moveObstacle();
     void instantiateObstacle();
     void movePowerUp();
+    void instantiatePowerUp(Player& player);
 private:
     sf::Texture backgroundTexture;
     std::vector <sf::Sprite>backgroundSprites;
@@ -35,6 +36,9 @@ private:
     RocketFactory rocketFactory;
     sf:: Texture powerUpTexture;
     std::vector <sf::Sprite>powerUpSprite;
+    sf::Clock clock;
+    sf:: Text distance;
+    sf:: Font font;
 };
 
 

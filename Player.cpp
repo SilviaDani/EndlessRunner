@@ -59,6 +59,7 @@ Yoshi::Yoshi(float y) {
     sprite.setTexture(texture);
     sprite.setPosition(200, LHEIGHT - sprite.getGlobalBounds().height + 2);
     sprite.setScale(3,3);
+    resetClock();
 }
 
 void Yoshi::move() {
@@ -74,21 +75,28 @@ void Yoshi::draw(sf::RenderWindow &window) {
 
 Form *Yoshi::nextForm() {
     Form* next = nullptr;
-    int dice = rand()%1; //TODO %n n numero di classi figlie di form - 1(perchè c'è yoshi)
+    int dice = rand()%3; //TODO %n n numero di classi figlie di form - 1(perchè c'è yoshi)
     switch (dice) {
-      /*  case 0:
+        case 0:
             next = new Bike(sprite.getPosition().y);
             break;
         case 1:
             next = new Giant(sprite.getPosition().y);
-            break; */
-        case 0:
+            break;
+        case 2:
             next = new GravityInverter(sprite.getPosition().y);
             break;
     }
     return next;
 }
 
+const sf::Clock &Yoshi::getClock() const {
+    return clock;
+}
+
+void Yoshi::resetClock() {
+    clock.restart();
+}
 
 Bike::Bike(float y) {
     if (!texture.loadFromFile("../Sprites/yoshibike.png")) {
@@ -130,7 +138,6 @@ Form *Bike::nextForm() {
 
 
 Giant::Giant(float y) {
-
     if (!bodyTexture.loadFromFile("../Sprites/bigyoshi.png")) {
         //TODO handle exception
     }
@@ -173,7 +180,6 @@ void Giant::move() {
            sprite.setPosition(startingPosition);
        }
    }
-
 //TODO AGGIUSTARE LO SPOSTAMENTO CIRCOLARE
     tongueSprite.setRotation(atan2(((sprite.getPosition().y+sprite.getGlobalBounds().height/2) - tongueSprite.getPosition().y), (sprite.getPosition().x - tongueSprite.getPosition().x)) *180/M_PI);
 }

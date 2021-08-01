@@ -42,6 +42,10 @@ public:
     void move() override;
     void draw(sf::RenderWindow &window) override;
     Form* nextForm() override;
+    const sf::Clock &getClock() const;
+    void resetClock();
+private:
+    sf::Clock clock;
 };
 
 class Bike : public Form{

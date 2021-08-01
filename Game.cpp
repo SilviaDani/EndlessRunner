@@ -27,8 +27,9 @@ void Game::update() {
     map.moveBackground();
     map.moveLand();
     map.moveGrass();
+    map.instantiatePowerUp(player);
     map.movePowerUp();
-    if (clock.getElapsedTime().asSeconds()>3.f) {
+    if (clock.getElapsedTime().asSeconds() > 3.f) {
         map.instantiateObstacle();
         clock.restart();
     }
