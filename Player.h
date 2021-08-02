@@ -10,7 +10,7 @@ class Form;
 class Player{
 public:
     Player();
-    void draw(sf::RenderWindow &window); // passo come argomento la finestra che ora è blu
+    void draw(sf::RenderWindow &window);
     void move();
     sf::Vector2f getPosition();
     virtual void setPosition(float x, float y);

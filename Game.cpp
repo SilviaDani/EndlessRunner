@@ -41,6 +41,7 @@ void Game::update() {
 void Game::draw(sf::RenderWindow &window) {
     map.draw(window);
     player.draw(window);
+    am->draw(window);
 }
 
 

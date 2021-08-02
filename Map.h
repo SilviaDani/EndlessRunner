@@ -24,6 +24,8 @@ public:
     void instantiateObstacle();
     void movePowerUp();
     void instantiatePowerUp(Player& player);
+    int coveredDistance;
+    int highscore = 0;
 private:
     sf::Texture backgroundTexture;
     std::vector <sf::Sprite>backgroundSprites;
@@ -37,8 +39,8 @@ private:
     sf:: Texture powerUpTexture;
     std::vector <sf::Sprite>powerUpSprite;
     sf::Clock clock;
-    sf:: Text distance;
-    sf:: Font font;
+    sf::Text distance;
+    sf::Font font;
 };
 
 

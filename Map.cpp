@@ -10,60 +10,61 @@
 
 
 Map::Map() {
-        if (!backgroundTexture.loadFromFile("../Sprites/yoshisbackground.png")) {
+    if(!font.loadFromFile("../arial.ttf")){
+        //TODO handle exception
+    }
+    distance.setFont(font);
+    distance.setCharacterSize(24);
+    distance.setFillColor(sf::Color::Black);
+
+    if (!backgroundTexture.loadFromFile("../Sprites/yoshisbackground.png")) {
             //TODO handle exception
-        }
-        if(!font.loadFromFile("../arial.ttf")){
-            //TODO handle exception
-        }
-        distance.setFont(font);
-        distance.setCharacterSize(24);
-        distance.setFillColor(sf::Color::Black);
-        clock.restart();
-        sf::Sprite bgSprite1, bgSprite2, lSprite1, lSprite2, gSprite1, gSprite2, pSprite;
-        bgSprite1.setTexture(backgroundTexture);
-        bgSprite2.setTexture(backgroundTexture);
-        double bgScale = static_cast<double>(SCREENWIDTH)/backgroundTexture.getSize().x;
-        bgSprite1.setScale(bgScale,bgScale);
-        bgSprite1.setPosition(0,0);
-        bgSprite2.setScale(bgScale,bgScale);
-        bgSprite2.setPosition(bgSprite1.getLocalBounds().width * bgScale, 0);
-        backgroundSprites.push_back(bgSprite1);
-        backgroundSprites.push_back(bgSprite2);
+    }
+    clock.restart();
+    sf::Sprite bgSprite1, bgSprite2, lSprite1, lSprite2, gSprite1, gSprite2, pSprite;
+    bgSprite1.setTexture(backgroundTexture);
+    bgSprite2.setTexture(backgroundTexture);
+    double bgScale = static_cast<double>(SCREENWIDTH)/backgroundTexture.getSize().x;
+    bgSprite1.setScale(bgScale,bgScale);
+    bgSprite1.setPosition(0,0);
+    bgSprite2.setScale(bgScale,bgScale);
+    bgSprite2.setPosition(bgSprite1.getLocalBounds().width * bgScale, 0);
+    backgroundSprites.push_back(bgSprite1);
+    backgroundSprites.push_back(bgSprite2);
 
-        if (!landTexture.loadFromFile("../Sprites/yoshisland.png")) {
-        //TODO handle exception
-        }
-        lSprite1.setTexture(landTexture);
-        lSprite2.setTexture(landTexture);
-        double lScale = static_cast<double>(SCREENWIDTH)/landTexture.getSize().x;
-        lSprite1.setScale(lScale, lScale);
-        lSprite1.setPosition(0, LHEIGHT);
-        lSprite2.setScale(lScale,lScale);
-        lSprite2.setPosition(lSprite1.getLocalBounds().width * lScale, LHEIGHT);
-        landSprites.push_back(lSprite1);
-        landSprites.push_back(lSprite2);
+    if (!landTexture.loadFromFile("../Sprites/yoshisland.png")) {
+       //TODO handle exception
+    }
+    lSprite1.setTexture(landTexture);
+    lSprite2.setTexture(landTexture);
+    double lScale = static_cast<double>(SCREENWIDTH)/landTexture.getSize().x;
+    lSprite1.setScale(lScale, lScale);
+    lSprite1.setPosition(0, LHEIGHT);
+    lSprite2.setScale(lScale,lScale);
+    lSprite2.setPosition(lSprite1.getLocalBounds().width * lScale, LHEIGHT);
+    landSprites.push_back(lSprite1);
+    landSprites.push_back(lSprite2);
 
-        if (!grassTexture.loadFromFile("../Sprites/yoshisgrass.png")){
+    if (!grassTexture.loadFromFile("../Sprites/yoshisgrass.png")){
         //TODO handle exception
-        }
-        gSprite1.setTexture(grassTexture);
-        gSprite2.setTexture(grassTexture);
-        double gScale = static_cast<double>(SCREENWIDTH)/grassTexture.getSize().x;
-        gSprite1.setScale(gScale, gScale);
-        gSprite1.setPosition(0, LHEIGHT - grassTexture.getSize().y + 2);
-        gSprite2.setScale(gScale,gScale);
-        gSprite2.setPosition(gSprite1.getLocalBounds().width * gScale, LHEIGHT - grassTexture.getSize().y + 2);
-        grassSprites.push_back(gSprite1);
-        grassSprites.push_back(gSprite2);
+    }
+    gSprite1.setTexture(grassTexture);
+    gSprite2.setTexture(grassTexture);
+    double gScale = static_cast<double>(SCREENWIDTH)/grassTexture.getSize().x;
+    gSprite1.setScale(gScale, gScale);
+    gSprite1.setPosition(0, LHEIGHT - grassTexture.getSize().y + 2);
+    gSprite2.setScale(gScale,gScale);
+    gSprite2.setPosition(gSprite1.getLocalBounds().width * gScale, LHEIGHT - grassTexture.getSize().y + 2);
+    grassSprites.push_back(gSprite1);
+    grassSprites.push_back(gSprite2);
 
-        if (!powerUpTexture.loadFromFile("../Sprites/block.png")) {
+    if (!powerUpTexture.loadFromFile("../Sprites/block.png")) {
         //TODO handle exception
-        }
-        pSprite.setTexture(powerUpTexture);
-        pSprite.setPosition(SCREENWIDTH + 2, SCREENHEIGHT/6);
-        pSprite.setScale(2.5,2.5);
-        powerUpSprite.push_back(pSprite);
+    }
+    pSprite.setTexture(powerUpTexture);
+    pSprite.setPosition(SCREENWIDTH + 2, SCREENHEIGHT/6);
+    pSprite.setScale(2.5,2.5);
+    powerUpSprite.push_back(pSprite);
 }
 
 void Map::draw(sf::RenderWindow &window){
@@ -77,11 +78,12 @@ void Map::draw(sf::RenderWindow &window){
         l->draw(window);
     for (auto m : powerUpSprite)
         window.draw(m);
-    int coveredDistance = clock.getElapsedTime().asSeconds() * INIT_SPEEDL; //TODO aggiungi accelerazione
-    if(coveredDistance >= 100)
+    coveredDistance = clock.getElapsedTime().asSeconds() * INIT_SPEEDL; //TODO aggiungi accelerazione
+    if (coveredDistance >= 100)
         notify(Game::getInstance()->player, Event::EVENT_100DISTANCE);
     distance.setString(std::to_string(coveredDistance));
     window.draw(distance);
+    //if ()
 }
 
 
@@ -161,6 +163,10 @@ void Map::checkCollisions(Player& player) {
                     player.kill();
                     notify(player, Event::EVENT_DEATH);
                     std::cerr << "sei morto" << std::endl;
+                    if (coveredDistance > highscore) {
+                        highscore = coveredDistance; //TODO AGGIUNGI MONETE AL PUNTEGGIO
+                        std::cerr << "new highscore!!"<< coveredDistance << std::endl;
+                    }
                 }
                 else
                     player.changeForm(); //TODO implementa codice per vivere se pari i missili da gigante
@@ -198,8 +204,6 @@ void Map::movePowerUp() {
         if (powerUpSprite.at(m).getPosition().x < 0 - powerUpSprite.at(m).getGlobalBounds().width - 3)
             powerUpSprite.pop_back();
     }
-
-
 }
 
 void Map::instantiatePowerUp(Player& player) {
