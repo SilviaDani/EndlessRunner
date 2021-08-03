@@ -78,12 +78,13 @@ void Map::draw(sf::RenderWindow &window){
         l->draw(window);
     for (auto m : powerUpSprite)
         window.draw(m);
-    coveredDistance = clock.getElapsedTime().asSeconds() * INIT_SPEEDL; //TODO aggiungi accelerazione
-    if (coveredDistance >= 100)
+    coveredDistance = clock.getElapsedTime().asSeconds() * INIT_SPEEDL;
+    //TODO currentScore = coveredDistance + monetine;
+    totalDistance += coveredDistance;
+    if (coveredDistance >= 100) //TODO non coveredDistance ma currentScore
         notify(Game::getInstance()->player, Event::EVENT_100DISTANCE);
     distance.setString(std::to_string(coveredDistance));
     window.draw(distance);
-    //if ()
 }
 
 
@@ -153,6 +154,14 @@ void Map::checkCollisions(Player& player) {
     }
     for (auto i : obstacles) {
         Giant* form = dynamic_cast<Giant*>(player.form);
+        if (form){
+            if (form->getBodySprite().getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())
+            || form->getTongueSprite().getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())) {
+                player.changeForm();
+                for (auto k : obstacles)
+                    obstacles.pop_back();
+            }
+        }
         if (player.getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())) {
             if (form) {
                 std::cerr << "hai parato un missile" << std::endl;
@@ -163,15 +172,17 @@ void Map::checkCollisions(Player& player) {
                     player.kill();
                     notify(player, Event::EVENT_DEATH);
                     std::cerr << "sei morto" << std::endl;
+                    Game::getInstance()->save();
                     if (coveredDistance > highscore) {
                         highscore = coveredDistance; //TODO AGGIUNGI MONETE AL PUNTEGGIO
                         std::cerr << "new highscore!!"<< coveredDistance << std::endl;
                     }
                 }
-                else
-                    player.changeForm(); //TODO implementa codice per vivere se pari i missili da gigante
-                for (auto k : obstacles)
-                    obstacles.pop_back();
+                else {
+                    player.changeForm();
+                    for (auto k : obstacles)
+                        obstacles.pop_back();
+                }
             }
         }
     }
@@ -217,5 +228,13 @@ void Map::instantiatePowerUp(Player& player) {
             form->resetClock();
         }
     }
+}
+
+int Map::getHighscore() const {
+    return highscore;
+}
+
+int Map::getTotalDistance() const {
+    return totalDistance;
 }
 

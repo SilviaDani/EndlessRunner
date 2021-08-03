@@ -16,9 +16,7 @@ public:
     const sf::Text &getTitle() const;
     const sf::Text &getAchievementText() const;
     const sf::Sprite &getSprite() const;
-
     const sf::RectangleShape &getRect() const;
-
 private:
     sf::Text title;
     bool unlocked = false;
@@ -37,6 +35,7 @@ private:
     void unlock(Achievement* achievement);
     std::vector<Achievement*> achUnlocked;
     bool isUnlocked(Achievement *ach);
+    sf::Clock clock;
 };
 
 

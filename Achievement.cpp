@@ -79,7 +79,7 @@ void AchievementManager::onNotify(const Player &player, Event event) {
 void AchievementManager::unlock(Achievement* achievement) {
     if (!achievement->isUnlocked()) {
         achievement->unlock();
-        std::cout<<"BRAVOOOOO!!"<<std::endl; //TODO far apparire un badge
+        clock.restart();
     }
 }
 
@@ -95,7 +95,7 @@ bool AchievementManager::isUnlocked(Achievement* ach){
 }
 
 void AchievementManager::draw(sf::RenderWindow &window) {
-    if(achUnlocked.size() != 0){
+    if(achUnlocked.size() != 0 && clock.getElapsedTime().asSeconds() <= 3){
         window.draw(achUnlocked.back()->getRect());
         window.draw(achUnlocked.back()->getTitle());
         window.draw(achUnlocked.back()->getAchievementText());

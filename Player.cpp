@@ -194,6 +194,14 @@ Form *Giant::nextForm() {
     return new Yoshi;
 }
 
+const sf::Sprite &Giant::getTongueSprite() const {
+    return tongueSprite;
+}
+
+const sf::Sprite &Giant::getBodySprite() const {
+    return bodySprite;
+}
+
 
 GravityInverter::GravityInverter(float y) {
     if (!texture.loadFromFile("../Sprites/spaceyoshi.png")) {

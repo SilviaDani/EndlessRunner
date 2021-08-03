@@ -18,6 +18,8 @@ public:
     sf::Window* window;
     void update();
     void draw(sf::RenderWindow &window);
+    void save();
+    void load();
 private:
     Game();
     static Game* instance;

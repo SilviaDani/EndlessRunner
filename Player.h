@@ -66,6 +66,8 @@ public:
     void move() override;
     void draw(sf::RenderWindow &window) override;
     Form* nextForm() override;
+    const sf::Sprite &getBodySprite() const;
+    const sf::Sprite &getTongueSprite() const;
 private:
     sf:: Texture bodyTexture;
     sf:: Sprite bodySprite;
