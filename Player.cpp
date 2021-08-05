@@ -3,8 +3,6 @@
 //
 #include <iostream>
 #include "Player.h"
-#include "CONSTANTS.h"
-#include "Game.h"
 #include <math.h>
 
 Player::Player() {
@@ -43,12 +41,21 @@ void Player::changeForm() {
     form = form->nextForm();
 }
 
-bool Player::isAlive() const {
+bool Player::isAlive() const{
     return alive;
 }
 
 void Player::kill() {
     Player::alive = false;
+}
+
+void Player::reset() {
+    if (Yoshi* y = dynamic_cast<Yoshi*>(form)){
+        alive = true;
+        setPosition(200, LHEIGHT - y->getSprite().getGlobalBounds().height + 2);
+        y->resetClock();
+    }
+
 }
 
 
@@ -97,6 +104,7 @@ const sf::Clock &Yoshi::getClock() const {
 void Yoshi::resetClock() {
     clock.restart();
 }
+
 
 Bike::Bike(float y) {
     if (!texture.loadFromFile("../Sprites/yoshibike.png")) {

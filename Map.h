@@ -24,8 +24,10 @@ public:
     void instantiateObstacle();
     void movePowerUp();
     void instantiatePowerUp(Player& player);
+    void reset();
     int getHighscore() const;
     int getTotalDistance() const;
+    int getCurrentScore() const;
 private:
     sf::Texture backgroundTexture;
     std::vector <sf::Sprite>backgroundSprites;
@@ -41,9 +43,10 @@ private:
     sf::Clock clock;
     sf::Text distance;
     sf::Font font;
-    int coveredDistance;
+    int coveredDistance = 0;
     int highscore = 0;
     int totalDistance = 0;
+    int currentScore = 0;
 };
 
 

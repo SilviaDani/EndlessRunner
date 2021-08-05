@@ -17,7 +17,7 @@ Achievement::Achievement(std::string title, std::string text, std::string icon) 
     rect = sf::RectangleShape(sf::Vector2f(SCREENWIDTH/2,100));
     rect.setPosition(SCREENWIDTH/2 - sprite.getGlobalBounds().width - 16, 0);
     rect.setFillColor(sf::Color::Blue);
-    if(!font.loadFromFile("../arial.ttf")){
+    if(!font.loadFromFile("../Fonts/arial.ttf")){
         //TODO handle exception
     }
     Achievement::title.setFont(font);

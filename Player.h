@@ -19,6 +19,7 @@ public:
     Form* form = nullptr; //TODO make it private
     bool isAlive() const;
     void kill();
+    void reset();
 protected:
     bool alive = true;
 };

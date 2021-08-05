@@ -8,23 +8,28 @@
 #include "Player.h"
 #include "Map.h"
 #include "Achievement.h"
+#include "State.h"
+
+class State;
 
 class Game {
 public:
     static Game* getInstance();
     Player player;
     Map map;
-    sf::Clock clock;
     sf::Window* window;
     void update();
     void draw(sf::RenderWindow &window);
     void save();
     void load();
+    AchievementManager *getAm() const;
+    State *getState() const;
+    void setState(State *state);
 private:
     Game();
+    State* state;
     static Game* instance;
     AchievementManager* am;
-
 };
 
 

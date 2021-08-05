@@ -10,7 +10,7 @@
 
 
 Map::Map() {
-    if(!font.loadFromFile("../arial.ttf")){
+    if(!font.loadFromFile("../Fonts/arial.ttf")){
         //TODO handle exception
     }
     distance.setFont(font);
@@ -21,7 +21,7 @@ Map::Map() {
             //TODO handle exception
     }
     clock.restart();
-    sf::Sprite bgSprite1, bgSprite2, lSprite1, lSprite2, gSprite1, gSprite2, pSprite;
+    sf::Sprite bgSprite1, bgSprite2, lSprite1, lSprite2, gSprite1, gSprite2;
     bgSprite1.setTexture(backgroundTexture);
     bgSprite2.setTexture(backgroundTexture);
     double bgScale = static_cast<double>(SCREENWIDTH)/backgroundTexture.getSize().x;
@@ -61,10 +61,6 @@ Map::Map() {
     if (!powerUpTexture.loadFromFile("../Sprites/block.png")) {
         //TODO handle exception
     }
-    pSprite.setTexture(powerUpTexture);
-    pSprite.setPosition(SCREENWIDTH + 2, SCREENHEIGHT/6);
-    pSprite.setScale(2.5,2.5);
-    powerUpSprite.push_back(pSprite);
 }
 
 void Map::draw(sf::RenderWindow &window){
@@ -79,7 +75,6 @@ void Map::draw(sf::RenderWindow &window){
     for (auto m : powerUpSprite)
         window.draw(m);
     coveredDistance = clock.getElapsedTime().asSeconds() * INIT_SPEEDL;
-    //TODO currentScore = coveredDistance + monetine;
     totalDistance += coveredDistance;
     if (coveredDistance >= 100) //TODO non coveredDistance ma currentScore
         notify(Game::getInstance()->player, Event::EVENT_100DISTANCE);
@@ -150,6 +145,7 @@ void Map::checkCollisions(Player& player) {
             std::cout << "power up" << std::endl;
             powerUpSprite.pop_back();
             player.changeForm();
+            obstacles.clear();
         }
     }
     for (auto i : obstacles) {
@@ -170,12 +166,13 @@ void Map::checkCollisions(Player& player) {
             else {
                 if (Yoshi *form = dynamic_cast<Yoshi *>(player.form)) {
                     player.kill();
+                    currentScore = coveredDistance; //TODO+ monetine;
                     notify(player, Event::EVENT_DEATH);
                     std::cerr << "sei morto" << std::endl;
                     Game::getInstance()->save();
-                    if (coveredDistance > highscore) {
-                        highscore = coveredDistance; //TODO AGGIUNGI MONETE AL PUNTEGGIO
-                        std::cerr << "new highscore!!"<< coveredDistance << std::endl;
+                    if (currentScore > highscore) {
+                        highscore = currentScore;
+                        std::cerr << "new highscore!!"<< currentScore << std::endl;
                     }
                 }
                 else {
@@ -230,6 +227,14 @@ void Map::instantiatePowerUp(Player& player) {
     }
 }
 
+void Map::reset() {
+    obstacles.clear();
+    powerUpSprite.clear();
+    currentScore = 0;
+    coveredDistance = 0;
+    clock.restart();
+}
+
 int Map::getHighscore() const {
     return highscore;
 }
@@ -237,4 +242,9 @@ int Map::getHighscore() const {
 int Map::getTotalDistance() const {
     return totalDistance;
 }
+
+int Map::getCurrentScore() const {
+    return currentScore;
+}
+
 

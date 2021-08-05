@@ -5,43 +5,29 @@
 #include <fstream>
 #include "Game.h"
 #include "Player.h"
+#include "StateGame.h"
+#include "StateMainMenu.h"
 
 Game* Game::instance = nullptr;
 
 Game::Game() {
-    clock.restart();
     am = new AchievementManager();
     map.addObserver(am);
+    state = new StateMainMenu(this);
 }
 
 Game* Game::getInstance(){
     if (instance == nullptr)
-    {
         instance = new Game();
-    }
     return instance;
 }
 
 void Game::update() {
-    player.move();
-    map.checkCollisions(player);
-    map.moveBackground();
-    map.moveLand();
-    map.moveGrass();
-    map.instantiatePowerUp(player);
-    map.movePowerUp();
-    if (clock.getElapsedTime().asSeconds() > 3.f) {
-        map.instantiateObstacle();
-        clock.restart();
-    }
-    map.moveObstacle();
-
-    //player.printPosition();
+  state->update();
 }
 
 void Game::draw(sf::RenderWindow &window) {
-    map.draw(window);
-    player.draw(window);
+    state->draw(window);
     am->draw(window);
 }
 
@@ -53,6 +39,18 @@ void Game::save() {
         saveFile << map.getTotalDistance() << ",";
     }
     saveFile.close();
+}
+
+AchievementManager *Game::getAm() const {
+    return am;
+}
+
+State *Game::getState() const {
+    return state;
+}
+
+void Game::setState(State *state) {
+    Game::state = state;
 }
 
 
