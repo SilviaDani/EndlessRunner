@@ -44,8 +44,10 @@ void StateMainMenu::draw(sf::RenderWindow &window) {
 void StateMainMenu::update() {}
 
 void StateMainMenu::changeState(State *nextState) {
+    game->load();
     State* tmpState = game->getState();
     game->setState(nextState);
     game->getMap().reset();
     delete tmpState;
+
 }

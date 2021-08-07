@@ -28,7 +28,9 @@ public:
     void moveCoin();
     void reset();
     int getHighscore() const;
+    void setHighscore(int highscore);
     int getTotalDistance() const;
+    void setTotalDistance(int totalDistance);
     int getCurrentScore() const;
     int getCoveredDistance() const;
 private:

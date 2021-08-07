@@ -31,11 +31,14 @@ class AchievementManager : public Observer{
 public:
     virtual void onNotify(const Player& player, Event event);
     void draw(sf::RenderWindow& window);
+    const std::vector<Achievement *> &getAchUnlocked() const;
+    void setAchUnlocked(Achievement *achievement);
 private:
     void unlock(Achievement* achievement);
     std::vector<Achievement*> achUnlocked;
     bool isUnlocked(Achievement *ach);
     sf::Clock clock;
+    bool isLoading = true;
 };
 
 

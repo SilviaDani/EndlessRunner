@@ -83,7 +83,7 @@ void Map::draw(sf::RenderWindow &window){
         window.draw(n);
     coveredDistance = clock.getElapsedTime().asSeconds() * INIT_SPEEDL;
     totalDistance += coveredDistance;
-    if (coveredDistance >= 100) //TODO non coveredDistance ma currentScore
+    if (coveredDistance >= 100)
         notify(Game::getInstance()->getPlayer(), Event::EVENT_100DISTANCE);
     distance.setString(std::to_string(coveredDistance));
     window.draw(distance);
@@ -129,7 +129,7 @@ void Map::moveGrass() {
 
 
 void Map::checkCollisions(Player& player) {
-    if (Giant* form = dynamic_cast<Giant*>(player.getForm())){ //TODO cambia i limiti del gigante
+    if (Giant* form = dynamic_cast<Giant*>(player.getForm())){
         if (player.getPosition().y - (player.getGlobalBounds().height)/2 < 0)
             player.setPosition(player.getPosition().x, (player.getGlobalBounds().height)/2);
         if (player.getPosition().y + (player.getGlobalBounds().height)  > LHEIGHT + 2)
@@ -245,7 +245,7 @@ void Map::instantiatePowerUp(Player& player) {
 void Map::instantiateCoin() {
         sf:: Sprite coinSprite;
         coinSprite.setTexture(coinTexture);
-        coinSprite.setPosition(SCREENWIDTH + 2, rand()%int(LHEIGHT - coinSprite.getGlobalBounds().height) - 1);
+        coinSprite.setPosition(SCREENWIDTH + 2,  rand()%((int)(LHEIGHT - coinSprite.getGlobalBounds().height*2) - 1));
         coinSprite.setScale(1.6,1.6);
         coins.push_back(coinSprite);
 }
@@ -271,8 +271,16 @@ int Map::getHighscore() const {
     return highscore;
 }
 
+void Map::setHighscore(int highscore) {
+    Map::highscore = highscore;
+}
+
 int Map::getTotalDistance() const {
     return totalDistance;
+}
+
+void Map::setTotalDistance(int totalDistance) {
+    Map::totalDistance = totalDistance;
 }
 
 int Map::getCurrentScore() const {
@@ -282,4 +290,3 @@ int Map::getCurrentScore() const {
 int Map::getCoveredDistance() const {
     return coveredDistance;
 }
-

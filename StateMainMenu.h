@@ -12,7 +12,6 @@ public:
     void draw(sf::RenderWindow& window) override;
     void update() override;
     void changeState(State* nextState) override;
-    //TODO void load(std::string path);
 private:
     sf::Sprite sprite;
     sf::Texture texture;

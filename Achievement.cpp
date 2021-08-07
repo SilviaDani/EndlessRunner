@@ -80,6 +80,7 @@ void AchievementManager::unlock(Achievement* achievement) {
     if (!achievement->isUnlocked()) {
         achievement->unlock();
         clock.restart();
+        isLoading = false;
     }
 }
 
@@ -96,9 +97,19 @@ bool AchievementManager::isUnlocked(Achievement* ach){
 
 void AchievementManager::draw(sf::RenderWindow &window) {
     if(achUnlocked.size() != 0 && clock.getElapsedTime().asSeconds() <= 3){
-        window.draw(achUnlocked.back()->getRect());
-        window.draw(achUnlocked.back()->getTitle());
-        window.draw(achUnlocked.back()->getAchievementText());
-        window.draw(achUnlocked.back()->getSprite());
+        if(!isLoading){
+            window.draw(achUnlocked.back()->getRect());
+            window.draw(achUnlocked.back()->getTitle());
+            window.draw(achUnlocked.back()->getAchievementText());
+            window.draw(achUnlocked.back()->getSprite());
+        }
     }
+}
+
+const std::vector<Achievement *> &AchievementManager::getAchUnlocked() const {
+    return achUnlocked;
+}
+
+void AchievementManager::setAchUnlocked(Achievement *achievement) {
+    achUnlocked.push_back(achievement);
 }

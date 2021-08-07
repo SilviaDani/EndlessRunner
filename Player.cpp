@@ -68,7 +68,7 @@ Yoshi::Yoshi(float y) {
         //TODO handle exception
     }
     sprite.setTexture(texture);
-    sprite.setPosition(200, LHEIGHT - sprite.getGlobalBounds().height + 2);
+    sprite.setPosition(200, y);
     sprite.setScale(3,3);
     resetClock();
 }
@@ -86,15 +86,15 @@ void Yoshi::draw(sf::RenderWindow &window) {
 
 Form *Yoshi::nextForm() {
     Form* next = nullptr;
-    int dice = rand()%1; // %n n numero di classi figlie di form - 1(perchè c'è yoshi)
+    int dice = rand()%3; // %n n numero di classi figlie di form - 1(perchè c'è yoshi)
     switch (dice) {
-      //  case 0:
+        case 0:
             next = new Bike(sprite.getPosition().y);
             break;
-        case 0:
+        case 1:
             next = new Giant(sprite.getPosition().y);
             break;
-       // case 2:
+        case 2:
             next = new GravityInverter(sprite.getPosition().y);
             break;
     }
@@ -145,7 +145,7 @@ void Bike::draw(sf::RenderWindow &window) {
 }
 
 Form *Bike::nextForm() {
-    return new Yoshi();
+    return new Yoshi(sprite.getPosition().y);
 }
 
 
@@ -203,7 +203,7 @@ void Giant::draw(sf::RenderWindow &window) {
 }
 
 Form *Giant::nextForm() {
-    return new Yoshi;
+    return new Yoshi(sprite.getPosition().y);
 }
 
 const sf::Sprite &Giant::getTongueSprite() const {

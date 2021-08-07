@@ -49,6 +49,7 @@ public:
     void resetClock();
 private:
     sf::Clock clock;
+    float y = LHEIGHT - sprite.getGlobalBounds().height + 2;
 };
 
 class Bike : public Form{

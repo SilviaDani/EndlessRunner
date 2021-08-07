@@ -37,8 +37,35 @@ void Game::save() {
     if (saveFile.is_open()){
         saveFile << map.getHighscore() << ",";
         saveFile << map.getTotalDistance() << ",";
+        saveFile << am->getAchUnlocked().size() << ",";
+        for (auto i : am->getAchUnlocked()){
+            std::string title = i->getTitle().getString();
+            saveFile << title << ",";
+        }
     }
     saveFile.close();
+}
+
+void Game::load() {
+    if (std::ifstream("../saves.txt").good()){
+        std::ifstream saveFile ("../saves.txt");
+        if(saveFile.is_open()){
+            std::string highscoreString, totalDistanceString, nAchievementsString;
+            std::getline(saveFile, highscoreString, ',');
+            std::getline(saveFile, totalDistanceString, ',');
+            std::getline(saveFile, nAchievementsString, ',');
+            map.setHighscore(std::stoi(highscoreString));
+            map.setTotalDistance(std::stoi(totalDistanceString));
+            int nAchievements = std::stoi(nAchievementsString);
+            for (int i = 0; i<nAchievements; i++){
+                std::string currentAchString;
+                std::getline(saveFile, currentAchString, ',');
+                Achievement* ach = new Achievement(currentAchString, "");
+                ach->unlock();
+                am->setAchUnlocked(ach);
+            }
+        }
+    }
 }
 
 AchievementManager *Game::getAm() const {
@@ -68,5 +95,7 @@ void Game::setWindow(sf::Window *window) {
 sf::Window *Game::getWindow() const {
     return window;
 }
+
+
 
 
