@@ -15,7 +15,9 @@ public:
     void changeState(State* nextState) override;
 private:
     sf::Clock clock;
+    sf:: Clock coinClock;
     float timeNextObstacle = 3.f;
+    float coinTime = 3.7f;
 };
 
 

@@ -19,7 +19,9 @@ StateGameOver::StateGameOver(Game *gameptr) {
     score.setCharacterSize(24);
     score.setFillColor(sf::Color::White);
     score.setPosition(SCREENWIDTH/2 - 70, SCREENHEIGHT/2 - 60);
-    score.setString("Current score:" + std::to_string(game->map.getCurrentScore()) + "\nHighscore:" + std::to_string(game->map.getHighscore()));
+    score.setString("Current score:" + std::to_string(game->getMap().getCurrentScore())
+            + "\nCovered distance:" + std::to_string(game->getMap().getCoveredDistance())
+            + "\nHighscore:" + std::to_string(game->getMap().getHighscore()));
 
     if(!titleFont.loadFromFile("../Fonts/pixel.TTF")){
         //TODO handle exception
@@ -43,11 +45,11 @@ void StateGameOver::update() {}
 
 void StateGameOver::changeState(State *nextState) {
     if (State* s = dynamic_cast<StateGame*>(nextState)){
-        game->map.reset();
-        game->player.reset();
+        game->getMap().reset();
+        game->getPlayer().reset();
     }
     else
-        game->window->close();
+        game->getWindow()->close();
     if (nextState!= nullptr) {
         State* tmpState = game->getState();
         game->setState(nextState);

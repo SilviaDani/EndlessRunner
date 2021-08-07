@@ -61,6 +61,11 @@ Map::Map() {
     if (!powerUpTexture.loadFromFile("../Sprites/block.png")) {
         //TODO handle exception
     }
+
+    if (!coinTexture.loadFromFile("../Sprites/coin.png")) {
+        //TODO handle exception
+    }
+
 }
 
 void Map::draw(sf::RenderWindow &window){
@@ -74,10 +79,12 @@ void Map::draw(sf::RenderWindow &window){
         l->draw(window);
     for (auto m : powerUpSprite)
         window.draw(m);
+    for (auto n : coins)
+        window.draw(n);
     coveredDistance = clock.getElapsedTime().asSeconds() * INIT_SPEEDL;
     totalDistance += coveredDistance;
     if (coveredDistance >= 100) //TODO non coveredDistance ma currentScore
-        notify(Game::getInstance()->player, Event::EVENT_100DISTANCE);
+        notify(Game::getInstance()->getPlayer(), Event::EVENT_100DISTANCE);
     distance.setString(std::to_string(coveredDistance));
     window.draw(distance);
 }
@@ -122,13 +129,13 @@ void Map::moveGrass() {
 
 
 void Map::checkCollisions(Player& player) {
-    if (Giant* form = dynamic_cast<Giant*>(player.form)){ //TODO cambia i limiti del gigante
+    if (Giant* form = dynamic_cast<Giant*>(player.getForm())){ //TODO cambia i limiti del gigante
         if (player.getPosition().y - (player.getGlobalBounds().height)/2 < 0)
             player.setPosition(player.getPosition().x, (player.getGlobalBounds().height)/2);
         if (player.getPosition().y + (player.getGlobalBounds().height)  > LHEIGHT + 2)
             player.setPosition(player.getPosition().x, LHEIGHT - (player.getGlobalBounds().height) + 2);
     }
-    else if (GravityInverter* form = dynamic_cast<GravityInverter*>(player.form)){
+    else if (GravityInverter* form = dynamic_cast<GravityInverter*>(player.getForm())){
         if (player.getPosition().y - (player.getGlobalBounds().height)/2 < 0)
             player.setPosition(player.getPosition().x, (player.getGlobalBounds().height)/2);
         if (player.getPosition().y + (player.getGlobalBounds().height)/2  > LHEIGHT + 2)
@@ -148,8 +155,15 @@ void Map::checkCollisions(Player& player) {
             obstacles.clear();
         }
     }
+    for (int i = 0; i<coins.size(); i++){
+        if (player.getGlobalBounds().intersects(coins.at(i).getGlobalBounds())) {
+            std::cout << "coin" << std::endl;
+            coins.erase(coins.begin()+i);
+            pickedCoins++;
+        }
+    }
     for (auto i : obstacles) {
-        Giant* form = dynamic_cast<Giant*>(player.form);
+        Giant* form = dynamic_cast<Giant*>(player.getForm());
         if (form){
             if (form->getBodySprite().getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())
             || form->getTongueSprite().getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())) {
@@ -164,9 +178,9 @@ void Map::checkCollisions(Player& player) {
                 obstacles.pop_back();
             }
             else {
-                if (Yoshi *form = dynamic_cast<Yoshi *>(player.form)) {
+                if (Yoshi *form = dynamic_cast<Yoshi *>(player.getForm())) {
                     player.kill();
-                    currentScore = coveredDistance; //TODO+ monetine;
+                    currentScore = coveredDistance + pickedCoins;
                     notify(player, Event::EVENT_DEATH);
                     std::cerr << "sei morto" << std::endl;
                     Game::getInstance()->save();
@@ -197,13 +211,13 @@ void Map::moveObstacle() {
 void Map::instantiateObstacle() {
     Obstacle* tmp;
     int rndm = rand() % 100;
-    Giant* form = dynamic_cast<Giant*>(Game::getInstance()->player.form);
-    if (rndm < 50 || form)
+    Giant* formg = dynamic_cast<Giant*>(Game::getInstance()->getPlayer().getForm());
+    Bike* formb = dynamic_cast<Bike*>(Game::getInstance()->getPlayer().getForm());
+if (rndm < 50 || formg || formb)
         tmp = rocketFactory.factoryMethod();
     else
         tmp = stoneFactory.factoryMethod();
     obstacles.push_back(tmp);
-
 }
 
 void Map::movePowerUp() {
@@ -215,7 +229,7 @@ void Map::movePowerUp() {
 }
 
 void Map::instantiatePowerUp(Player& player) {
-    if (Yoshi* form = dynamic_cast<Yoshi*>(player.form)) {
+    if (Yoshi* form = dynamic_cast<Yoshi*>(player.getForm())) {
         if (form->getClock().getElapsedTime().asSeconds() >= 5) {
             sf:: Sprite pSprite;
             pSprite.setTexture(powerUpTexture);
@@ -227,11 +241,29 @@ void Map::instantiatePowerUp(Player& player) {
     }
 }
 
+
+void Map::instantiateCoin() {
+        sf:: Sprite coinSprite;
+        coinSprite.setTexture(coinTexture);
+        coinSprite.setPosition(SCREENWIDTH + 2, rand()%int(LHEIGHT - coinSprite.getGlobalBounds().height) - 1);
+        coinSprite.setScale(1.6,1.6);
+        coins.push_back(coinSprite);
+}
+
+void Map::moveCoin() {
+    for (int n = 0; n < coins.size(); n++){
+        coins.at(n).move(-INIT_SPEEDL,0);
+        if (coins.at(n).getPosition().x < 0 - coins.at(n).getGlobalBounds().width - 3)
+            coins.erase(coins.begin());
+    }
+}
+
 void Map::reset() {
     obstacles.clear();
     powerUpSprite.clear();
     currentScore = 0;
     coveredDistance = 0;
+    pickedCoins = 0;
     clock.restart();
 }
 
@@ -247,4 +279,7 @@ int Map::getCurrentScore() const {
     return currentScore;
 }
 
+int Map::getCoveredDistance() const {
+    return coveredDistance;
+}
 

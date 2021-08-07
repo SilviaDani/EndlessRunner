@@ -53,4 +53,20 @@ void Game::setState(State *state) {
     Game::state = state;
 }
 
+Player& Game::getPlayer() {
+    return player;
+}
+
+Map& Game::getMap() {
+    return map;
+}
+
+void Game::setWindow(sf::Window *window) {
+    Game::window = window;
+}
+
+sf::Window *Game::getWindow() const {
+    return window;
+}
+
 

@@ -12,14 +12,14 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(SCREENWIDTH,SCREENHEIGHT), "Endless Runner", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(100);
     Game *game= Game::getInstance();
-    game->window = &window;
+    game->setWindow(&window);
     while (window.isOpen()){
         sf::Event event{};
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space){
-                if (GravityInverter* form = dynamic_cast<GravityInverter*>(game->player.form)){
+                if (GravityInverter* form = dynamic_cast<GravityInverter*>(game->getPlayer().getForm())){
                     form->invertGravity();
                 }
             }

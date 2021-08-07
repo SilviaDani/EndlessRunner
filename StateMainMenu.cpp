@@ -46,6 +46,6 @@ void StateMainMenu::update() {}
 void StateMainMenu::changeState(State *nextState) {
     State* tmpState = game->getState();
     game->setState(nextState);
-    game->map.reset();
+    game->getMap().reset();
     delete tmpState;
 }

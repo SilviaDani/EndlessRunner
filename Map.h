@@ -24,29 +24,35 @@ public:
     void instantiateObstacle();
     void movePowerUp();
     void instantiatePowerUp(Player& player);
+    void instantiateCoin();
+    void moveCoin();
     void reset();
     int getHighscore() const;
     int getTotalDistance() const;
     int getCurrentScore() const;
+    int getCoveredDistance() const;
 private:
-    sf::Texture backgroundTexture;
-    std::vector <sf::Sprite>backgroundSprites;
-    sf::Texture landTexture;
-    std::vector <sf::Sprite>landSprites;
-    sf::Texture grassTexture;
-    std::vector <sf::Sprite>grassSprites;
-    std::vector <Obstacle*>obstacles;
+    sf:: Texture backgroundTexture;
+    std:: vector <sf::Sprite>backgroundSprites;
+    sf:: Texture landTexture;
+    std:: vector <sf::Sprite>landSprites;
+    sf:: Texture grassTexture;
+    std:: vector <sf::Sprite>grassSprites;
+    std:: vector <Obstacle*>obstacles;
     StoneFactory stoneFactory;
     RocketFactory rocketFactory;
     sf:: Texture powerUpTexture;
-    std::vector <sf::Sprite>powerUpSprite;
-    sf::Clock clock;
-    sf::Text distance;
-    sf::Font font;
+    std:: vector <sf::Sprite>powerUpSprite;
+    sf:: Texture coinTexture;
+    std:: vector <sf::Sprite>coins;
+    sf:: Clock clock;
+    sf:: Text distance;
+    sf:: Font font;
     int coveredDistance = 0;
     int highscore = 0;
     int totalDistance = 0;
     int currentScore = 0;
+    int pickedCoins = 0;
 };
 
 

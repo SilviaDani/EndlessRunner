@@ -11,17 +11,19 @@ class Player{
 public:
     Player();
     void draw(sf::RenderWindow &window);
-    void move();
-    sf::Vector2f getPosition();
+    void move() const;
+    sf::Vector2f getPosition() const;
     virtual void setPosition(float x, float y);
     sf::Rect<float> getGlobalBounds() const;
     void changeForm();
-    Form* form = nullptr; //TODO make it private
     bool isAlive() const;
     void kill();
     void reset();
+    Form *getForm() const;
 protected:
     bool alive = true;
+private:
+    Form* form = nullptr;
 };
 
 class Form{

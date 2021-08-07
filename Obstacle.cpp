@@ -29,8 +29,21 @@ Rocket::Rocket() {
     }
     obstacleSprite.setTexture(obstacleTexture);
     obstacleSprite.setScale(-0.1 , 0.1);
-    obstacleSprite.setPosition(SCREENWIDTH + 2, Game::getInstance()->player.getPosition().y);
+    if (Giant* form = dynamic_cast<Giant*>(Game::getInstance()->getPlayer().getForm())){
+        float yCoordinate = -1.0f;
+        while(yCoordinate < form->getBodySprite().getGlobalBounds().top + 100 || yCoordinate > LHEIGHT - form->getSprite().getGlobalBounds().height - 0.5f)
+            yCoordinate = rand()%int(LHEIGHT - (Game::getInstance()->getPlayer().getGlobalBounds().height)/2
+                    - obstacleSprite.getGlobalBounds().height) + (Game::getInstance()->getPlayer().getGlobalBounds().height);
+        obstacleSprite.setPosition(SCREENWIDTH + 2, yCoordinate);
+    }
+    else{
+        float yCoordinate = -1.0f;
+        while(yCoordinate < 0 || yCoordinate > LHEIGHT - obstacleSprite.getGlobalBounds().height)
+            yCoordinate = Game::getInstance()->getPlayer().getPosition().y + rand()%200 - 100;
+        obstacleSprite.setPosition(SCREENWIDTH + 2, yCoordinate);
+    }
 }
+
 
 void Rocket::doAction() {
     obstacleSprite.move(-5, 0);
@@ -49,11 +62,12 @@ Stone::Stone() {
 }
 
 void Stone::doAction() {
-    if (clock.getElapsedTime().asSeconds()>2.f && !isFalling) {
+    float fallingTime = rand()%4 + 2.7f + (rand()%101)/100;
+    if (clock.getElapsedTime().asSeconds()>fallingTime && !isFalling) {
         isFalling = true;
         hasTouchedGround = false;
     }
-    if (isFalling){ //TODO mettere condizioni più stringenti sugli if
+    if (isFalling){
         if (obstacleSprite.getPosition().y < LHEIGHT - obstacleSprite.getGlobalBounds().height && !hasTouchedGround)
             obstacleSprite.move(0, 5);
         else if (obstacleSprite.getPosition().y > startingPosition.y + 2)

@@ -15,9 +15,6 @@ class State;
 class Game {
 public:
     static Game* getInstance();
-    Player player;
-    Map map;
-    sf::Window* window;
     void update();
     void draw(sf::RenderWindow &window);
     void save();
@@ -25,8 +22,15 @@ public:
     AchievementManager *getAm() const;
     State *getState() const;
     void setState(State *state);
+    Player& getPlayer();
+    Map &getMap();
+    sf::Window *getWindow() const;
+    void setWindow(sf::Window *window);
 private:
     Game();
+    Player player;
+    Map map;
+    sf::Window* window;
     State* state;
     static Game* instance;
     AchievementManager* am;

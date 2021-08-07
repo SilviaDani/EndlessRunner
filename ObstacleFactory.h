@@ -8,7 +8,7 @@
 
 class ObstacleFactory {
 public:
-    virtual Obstacle* factoryMethod()=0;
+    virtual Obstacle* factoryMethod() = 0;
 };
 
 class StoneFactory: public ObstacleFactory{

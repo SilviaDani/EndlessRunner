@@ -9,29 +9,36 @@
 StateGame::StateGame(Game* gameptr) {
     game = gameptr;
     clock.restart();
+    coinClock.restart();
 }
 
 void StateGame::update() {
-    game->player.move();
-    game->map.checkCollisions(game->player);
-    game->map.moveBackground();
-    game->map.moveLand();
-    game->map.moveGrass();
-    game->map.instantiatePowerUp(game->player);
-    game->map.movePowerUp();
+    game->getPlayer().move();
+    game->getMap().checkCollisions(game->getPlayer());
+    game->getMap().moveBackground();
+    game->getMap().moveLand();
+    game->getMap().moveGrass();
+    game->getMap().instantiatePowerUp(game->getPlayer());
+    game->getMap().movePowerUp();
     if (clock.getElapsedTime().asSeconds() > timeNextObstacle) {
         timeNextObstacle = rand()%4 + 2 + (rand()%101)/ 100;
-        game->map.instantiateObstacle();
+        game->getMap().instantiateObstacle();
         clock.restart();
     }
-    game->map.moveObstacle();
-    if (!game->player.isAlive())
+    game->getMap().moveObstacle();
+    if (coinClock.getElapsedTime().asSeconds() >= coinTime){
+        coinTime = rand()%4 + 2 + (rand()%101)/ 100;
+        game->getMap().instantiateCoin();
+        coinClock.restart();
+    }
+    game->getMap().moveCoin();
+    if (!game->getPlayer().isAlive())
         changeState(new StateGameOver(game));
 }
 
 void StateGame::draw(sf::RenderWindow& window) {
-    game->map.draw(window);
-    game->player.draw(window);
+    game->getMap().draw(window);
+    game->getPlayer().draw(window);
 }
 
 void StateGame::changeState(State *nextState) {

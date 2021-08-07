@@ -17,7 +17,7 @@ void Player::draw(sf::RenderWindow &window) {
 form->draw(window);
 }
 
-sf::Vector2f Player::getPosition() {
+sf::Vector2f Player::getPosition() const {
     return form->getSprite().getPosition();
 }
 
@@ -33,7 +33,7 @@ sf::Rect<float> Player::getGlobalBounds() const {
     return form->getSprite().getGlobalBounds();
 }
 
-void Player::move() {
+void Player::move() const {
     form->move();
 }
 
@@ -56,6 +56,10 @@ void Player::reset() {
         y->resetClock();
     }
 
+}
+
+Form *Player::getForm() const {
+    return form;
 }
 
 
@@ -82,15 +86,15 @@ void Yoshi::draw(sf::RenderWindow &window) {
 
 Form *Yoshi::nextForm() {
     Form* next = nullptr;
-    int dice = rand()%3; //TODO %n n numero di classi figlie di form - 1(perchè c'è yoshi)
+    int dice = rand()%1; // %n n numero di classi figlie di form - 1(perchè c'è yoshi)
     switch (dice) {
-        case 0:
+      //  case 0:
             next = new Bike(sprite.getPosition().y);
             break;
-        case 1:
+        case 0:
             next = new Giant(sprite.getPosition().y);
             break;
-        case 2:
+       // case 2:
             next = new GravityInverter(sprite.getPosition().y);
             break;
     }
@@ -115,7 +119,7 @@ Bike::Bike(float y) {
     sprite.setScale(3,3);
 }
 
-void Bike::move() { //TODO mettere condizioni più stringenti sugli if
+void Bike::move() {
     if (sprite.getPosition().y > LHEIGHT - sprite.getGlobalBounds().height - 2)
         hasTouchedGround = true;
     if (!hasTouchedGround)
