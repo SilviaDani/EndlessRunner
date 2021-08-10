@@ -6,8 +6,14 @@
 #include "Achievement.h"
 
 Achievement::Achievement(std::string title, std::string text, std::string icon) {
-    if (!texture.loadFromFile(icon)) {
-        //TODO handle exception
+    try {
+        if (!texture.loadFromFile(icon)) {
+            throw std::runtime_error("Achievement icon not found");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     sprite.setTexture(texture);
     sprite.setScale(3,3);
@@ -17,8 +23,14 @@ Achievement::Achievement(std::string title, std::string text, std::string icon) 
     rect = sf::RectangleShape(sf::Vector2f(SCREENWIDTH/2,100));
     rect.setPosition(SCREENWIDTH/2 - sprite.getGlobalBounds().width - 16, 0);
     rect.setFillColor(sf::Color::Blue);
-    if(!font.loadFromFile("../Fonts/arial.ttf")){
-        //TODO handle exception
+    try {
+        if (!font.loadFromFile("../Fonts/arial.ttf")){
+            throw std::runtime_error("File not found: ../Fonts/arial.ttf");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     Achievement::title.setFont(font);
     Achievement::title.setCharacterSize(30);

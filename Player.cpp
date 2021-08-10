@@ -9,8 +9,8 @@ Player::Player() {
     form = new Yoshi();
 }
 
-const sf::Sprite &Form::getSprite() const {
-    return sprite;
+const sf::Sprite Form::getSprite() const {
+    return sprite.getSprite();
 }
 
 void Player::draw(sf::RenderWindow &window) {
@@ -64,12 +64,19 @@ Form *Player::getForm() const {
 
 
 Yoshi::Yoshi(float y) {
-    if (!texture.loadFromFile("../Sprites/yoshi.png")) {
-        //TODO handle exception
+    try {
+        if (!texture.loadFromFile("../Sprites/yoshi.png")) {
+            throw std::runtime_error("File not found: ../Sprites/yoshi.png");
+        }
     }
-    sprite.setTexture(texture);
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
+    }
+    int nFrames = 2;
+    sprite = AnimatedSprite(texture, texture.getSize().y, texture.getSize().x/nFrames, nFrames);
     sprite.setPosition(200, y);
-    sprite.setScale(3,3);
+    sprite.setScale(-3,3);
     resetClock();
 }
 
@@ -81,7 +88,7 @@ void Yoshi::move() {
 }
 
 void Yoshi::draw(sf::RenderWindow &window) {
-    window.draw(sprite);
+    sprite.draw(window, 9); //TODO cambia frequenza via via che accelera
 }
 
 Form *Yoshi::nextForm() {
@@ -110,11 +117,36 @@ void Yoshi::resetClock() {
 }
 
 
-Bike::Bike(float y) {
-    if (!texture.loadFromFile("../Sprites/yoshibike.png")) {
-        //TODO handle exception
+Yoshi::Yoshi() {
+    try {
+        if (!texture.loadFromFile("../Sprites/yoshi.png")) {
+            throw std::runtime_error("File not found: ../Sprites/yoshi.png");
+        }
     }
-    sprite.setTexture(texture);
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
+    }
+    int nFrames = 2;
+    sprite = AnimatedSprite(texture, texture.getSize().y, texture.getSize().x/nFrames, nFrames);
+    sprite.setPosition(200, LHEIGHT - sprite.getGlobalBounds().height + 2);
+    sprite.setScale(-3,3);
+    resetClock();
+}
+
+
+Bike::Bike(float y) {
+    try {
+        if (!texture.loadFromFile("../Sprites/yoshibike.png")) {
+            throw std::runtime_error("File not found: ../Sprites/yoshibike.png");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
+    }
+    int nFrames = 1;
+    sprite = AnimatedSprite(texture, texture.getSize().y, texture.getSize().x/nFrames, nFrames);//FIXME manca la texture di yoshibike
     sprite.setPosition(200, y);
     sprite.setScale(3,3);
 }
@@ -141,7 +173,7 @@ void Bike::move() {
 }
 
 void Bike::draw(sf::RenderWindow &window) {
-    window.draw(sprite);
+   sprite.draw(window, 1);
 }
 
 Form *Bike::nextForm() {
@@ -150,26 +182,47 @@ Form *Bike::nextForm() {
 
 
 Giant::Giant(float y) {
-    if (!bodyTexture.loadFromFile("../Sprites/bigyoshi.png")) {
-        //TODO handle exception
+    try {
+        if (!bodyTexture.loadFromFile("../Sprites/bigyoshi.png")) {
+            throw std::runtime_error("File not found: ../Sprites/bigyoshi.png");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     bodySprite.setTexture(bodyTexture);
     bodySprite.setOrigin(0, bodySprite.getLocalBounds().height - 2);
     bodySprite.setPosition(-100, LHEIGHT);
     bodySprite.setScale(0.4, 0.4);
 
-    if (!tongueTexture.loadFromFile("../Sprites/yoshitongue2.png")) {
-        //TODO handle exception
+
+    try {
+        if (!tongueTexture.loadFromFile("../Sprites/yoshitongue2.png")) {
+            throw std::runtime_error("File not found: ../Sprites/yoshitongue2.png");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     tongueSprite.setTexture(tongueTexture);
     tongueSprite.setOrigin(0, (tongueSprite.getLocalBounds().height)/2);
     tongueSprite.setScale(1, 0.5);
     tongueSprite.setPosition((bodySprite.getGlobalBounds().width)/2 - 8, bodySprite.getPosition().y - (bodySprite.getGlobalBounds().height)/2 + 4);
 
-    if (!texture.loadFromFile("../Sprites/yoshitongue.png")) {
-        //TODO handle exception
+
+    try {
+        if (!texture.loadFromFile("../Sprites/yoshitongue.png")) {
+            throw std::runtime_error("File not found: ../Sprites/yoshitongue.png");
+        }
     }
-    sprite.setTexture(texture);
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
+    }
+    int nFrames = 1;
+    sprite = AnimatedSprite(texture, texture.getSize().y, texture.getSize().x/nFrames, nFrames); //FIXME;
     sprite.setScale(0.4,0.4);
     startingPosition = sf::Vector2f ((bodySprite.getGlobalBounds().width)/2 + (tongueSprite.getGlobalBounds().width)*
                                                                                   sin(acos((LHEIGHT-(sprite.getGlobalBounds().height)/2 - (bodySprite.getPosition().y -
@@ -179,27 +232,26 @@ Giant::Giant(float y) {
 
 void Giant::move() {
    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-          if(sprite.getPosition().y > bodySprite.getGlobalBounds().top + 100) {
+          if (sprite.getPosition().y > bodySprite.getGlobalBounds().top + 100) {
           sprite.setPosition(sprite.getPosition().x + (sprite.getPosition().y < bodySprite.getGlobalBounds().top + bodySprite.getGlobalBounds().height / 2 ? -0.5f : 0.5f),
                              sprite.getPosition().y - 1.f);
       }
          }
    else{
-       if(sprite.getPosition().y < LHEIGHT - sprite.getGlobalBounds().height - 0.5f) {
+       if (sprite.getPosition().y < LHEIGHT - sprite.getGlobalBounds().height - 0.5f) {
            sprite.setPosition(sprite.getPosition().x + (sprite.getPosition().y < bodySprite.getGlobalBounds().top + bodySprite.getGlobalBounds().height / 2 ? 0.5f : -0.5f),
                               sprite.getPosition().y + 1.f);
-       }else if(sprite.getPosition().y >= LHEIGHT - sprite.getGlobalBounds().height - 0.5f && sprite.getPosition().y < LHEIGHT - sprite.getGlobalBounds().height + 0.5f){
+       }else if (sprite.getPosition().y >= LHEIGHT - sprite.getGlobalBounds().height - 0.5f && sprite.getPosition().y < LHEIGHT - sprite.getGlobalBounds().height + 0.5f){
            sprite.setPosition(startingPosition);
        }
    }
-//TODO AGGIUSTARE LO SPOSTAMENTO CIRCOLARE
     tongueSprite.setRotation(atan2(((sprite.getPosition().y+sprite.getGlobalBounds().height/2) - tongueSprite.getPosition().y), (sprite.getPosition().x - tongueSprite.getPosition().x)) *180/M_PI);
 }
 
 void Giant::draw(sf::RenderWindow &window) {
     window.draw(bodySprite);
     window.draw(tongueSprite);
-    window.draw(sprite);
+    sprite.draw(window, 1);
 }
 
 Form *Giant::nextForm() {
@@ -216,10 +268,17 @@ const sf::Sprite &Giant::getBodySprite() const {
 
 
 GravityInverter::GravityInverter(float y) {
-    if (!texture.loadFromFile("../Sprites/spaceyoshi.png")) {
-        //TODO handle exception
+    try {
+        if (!texture.loadFromFile("../Sprites/spaceyoshi.png")) {
+            throw std::runtime_error("File not found: ../Sprites/spaceyoshi.png");
+        }
     }
-    sprite.setTexture(texture);
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
+    }
+    int nFrames = 1;
+    sprite = AnimatedSprite(texture, texture.getSize().y, texture.getSize().x/nFrames, nFrames); //FIXME
     sprite.setPosition(200, y);
     sprite.setScale(0.3,0.3);
     sprite.setOrigin(sprite.getOrigin().x, sprite.getOrigin().y + sprite.getLocalBounds().height/2);
@@ -235,11 +294,11 @@ void GravityInverter::invertGravity() {
 }
 
 void GravityInverter::draw(sf::RenderWindow &window) {
-    window.draw(sprite);
+    sprite.draw(window,1);
 }
 
 Form *GravityInverter::nextForm() {
-    return new Yoshi();
+    return new Yoshi(sprite.getPosition().y);
 }
 
 

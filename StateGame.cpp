@@ -20,13 +20,14 @@ void StateGame::update() {
     game->getMap().moveGrass();
     game->getMap().instantiatePowerUp(game->getPlayer());
     game->getMap().movePowerUp();
-    if (clock.getElapsedTime().asSeconds() > timeNextObstacle) {
+    acceleration = 1/(game->getMap().getClock().getElapsedTime().asSeconds()/10 + 1);
+    if (clock.getElapsedTime().asSeconds() > (timeNextObstacle * acceleration)) {
         timeNextObstacle = rand()%4 + 2 + (rand()%101)/ 100;
         game->getMap().instantiateObstacle();
         clock.restart();
     }
     game->getMap().moveObstacle();
-    if (coinClock.getElapsedTime().asSeconds() >= coinTime){
+    if (coinClock.getElapsedTime().asSeconds() >= (coinTime * acceleration)){
         coinTime = rand()%4 + 2 + (rand()%101)/ 100;
         game->getMap().instantiateCoin();
         coinClock.restart();
@@ -34,6 +35,7 @@ void StateGame::update() {
     game->getMap().moveCoin();
     if (!game->getPlayer().isAlive())
         changeState(new StateGameOver(game));
+
 }
 
 void StateGame::draw(sf::RenderWindow& window) {
@@ -45,5 +47,9 @@ void StateGame::changeState(State *nextState) {
     State* tmpState = game->getState();
     game->setState(nextState);
     delete tmpState;
+}
+
+float StateGame::getAcceleration() const {
+    return acceleration;
 }
 

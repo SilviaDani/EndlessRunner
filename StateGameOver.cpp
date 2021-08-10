@@ -7,8 +7,14 @@
 
 StateGameOver::StateGameOver(Game *gameptr) {
     game = gameptr;
-    if(!font.loadFromFile("../Fonts/arial.ttf")){
-        //TODO handle exception
+    try {
+        if (!font.loadFromFile("../Fonts/arial.ttf")){
+            throw std::runtime_error("File not found: ../Fonts/arial.ttf");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     text.setFont(font);
     text.setCharacterSize(24);
@@ -23,8 +29,15 @@ StateGameOver::StateGameOver(Game *gameptr) {
             + "\nCovered distance:" + std::to_string(game->getMap().getCoveredDistance())
             + "\nHighscore:" + std::to_string(game->getMap().getHighscore()));
 
-    if(!titleFont.loadFromFile("../Fonts/pixel.TTF")){
-        //TODO handle exception
+
+    try {
+        if (!titleFont.loadFromFile("../Fonts/pixel.TTF")){
+            throw std::runtime_error("File not found: ../Fonts/pixel.TTF");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     title.setFont(titleFont);
     title.setCharacterSize(40);

@@ -5,7 +5,6 @@
 #include <fstream>
 #include "Game.h"
 #include "Player.h"
-#include "StateGame.h"
 #include "StateMainMenu.h"
 
 Game* Game::instance = nullptr;
@@ -32,7 +31,7 @@ void Game::draw(sf::RenderWindow &window) {
 }
 
 void Game::save() {
-    //highscore, total covered distance, //TODO total runs played, unlocked achievements
+    //highscore, total covered distance, //TODO total runs played
     std::ofstream saveFile("../saves.txt");
     if (saveFile.is_open()){
         saveFile << map.getHighscore() << ",";

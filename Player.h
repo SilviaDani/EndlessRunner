@@ -5,6 +5,7 @@
 #ifndef ENDLESSRUNNER_YOSHI_H
 #define ENDLESSRUNNER_YOSHI_H
 #include "CONSTANTS.h"
+#include "AnimatedSprite.h"
 
 class Form;
 class Player{
@@ -33,15 +34,16 @@ public:
     virtual Form* nextForm() = 0;
     virtual ~Form() = default;
     void setPosition(float x, float y);
-    const sf::Sprite &getSprite() const;
+    const sf::Sprite getSprite() const;
 protected:
     sf:: Texture texture;
-    sf:: Sprite sprite;
+    AnimatedSprite sprite;
 };
 
 class Yoshi : public Form{
 public:
-    Yoshi(float y = LHEIGHT + 500); //TODO settare la posizione post mortem con power up
+    Yoshi();
+    Yoshi(float y);
     void move() override;
     void draw(sf::RenderWindow &window) override;
     Form* nextForm() override;
@@ -49,7 +51,6 @@ public:
     void resetClock();
 private:
     sf::Clock clock;
-    float y = LHEIGHT - sprite.getGlobalBounds().height + 2;
 };
 
 class Bike : public Form{

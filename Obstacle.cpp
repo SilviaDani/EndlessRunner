@@ -24,8 +24,14 @@ const sf::Sprite &Obstacle::getObstacleSprite() const {
 }
 
 Rocket::Rocket() {
-    if (!obstacleTexture.loadFromFile("../Sprites/rocket.png")) {
-        //TODO handle exception
+    try {
+        if (!obstacleTexture.loadFromFile("../Sprites/rocket.png")) {
+            throw std::runtime_error("File not found: ../Sprites/rocket.png");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     obstacleSprite.setTexture(obstacleTexture);
     obstacleSprite.setScale(-0.1 , 0.1);
@@ -51,8 +57,14 @@ void Rocket::doAction() {
 
 
 Stone::Stone() {
-    if (!obstacleTexture.loadFromFile("../Sprites/stone.png")) {
-        //TODO handle exception
+    try {
+        if (!obstacleTexture.loadFromFile("../Sprites/stone.png")) {
+            throw std::runtime_error("File not found: ../Sprites/stone.png");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     obstacleSprite.setTexture(obstacleTexture);
     obstacleSprite.setScale(0.65 , 0.65);
@@ -62,7 +74,7 @@ Stone::Stone() {
 }
 
 void Stone::doAction() {
-    float fallingTime = rand()%4 + 2.7f + (rand()%101)/100;
+    float fallingTime = rand()%4 + 2.5f + (rand()%101)/100;
     if (clock.getElapsedTime().asSeconds()>fallingTime && !isFalling) {
         isFalling = true;
         hasTouchedGround = false;

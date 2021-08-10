@@ -7,18 +7,32 @@
 #include "Player.h"
 #include <random>
 #include "Game.h"
+#include "StateGame.h"
 
 
 Map::Map() {
-    if(!font.loadFromFile("../Fonts/arial.ttf")){
-        //TODO handle exception
+    try {
+        if (!font.loadFromFile("../Fonts/arial.ttf")){
+            throw std::runtime_error("File not found: ../Fonts/arial.ttf");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     distance.setFont(font);
     distance.setCharacterSize(24);
     distance.setFillColor(sf::Color::Black);
 
-    if (!backgroundTexture.loadFromFile("../Sprites/yoshisbackground.png")) {
-            //TODO handle exception
+
+    try {
+        if (!backgroundTexture.loadFromFile("../Sprites/yoshisbackground.png")) {
+            throw std::runtime_error("File not found: ../Sprites/yoshisbackground.png");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     clock.restart();
     sf::Sprite bgSprite1, bgSprite2, lSprite1, lSprite2, gSprite1, gSprite2;
@@ -32,8 +46,15 @@ Map::Map() {
     backgroundSprites.push_back(bgSprite1);
     backgroundSprites.push_back(bgSprite2);
 
-    if (!landTexture.loadFromFile("../Sprites/yoshisland.png")) {
-       //TODO handle exception
+
+    try {
+        if (!landTexture.loadFromFile("../Sprites/yoshisland.png")) {
+            throw std::runtime_error("File not found: ../Sprites/yoshisland.png");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     lSprite1.setTexture(landTexture);
     lSprite2.setTexture(landTexture);
@@ -45,8 +66,15 @@ Map::Map() {
     landSprites.push_back(lSprite1);
     landSprites.push_back(lSprite2);
 
-    if (!grassTexture.loadFromFile("../Sprites/yoshisgrass.png")){
-        //TODO handle exception
+
+    try {
+        if (!grassTexture.loadFromFile("../Sprites/yoshisgrass.png")){
+            throw std::runtime_error("File not found: ../Sprites/yoshigrass.png");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     gSprite1.setTexture(grassTexture);
     gSprite2.setTexture(grassTexture);
@@ -58,14 +86,27 @@ Map::Map() {
     grassSprites.push_back(gSprite1);
     grassSprites.push_back(gSprite2);
 
-    if (!powerUpTexture.loadFromFile("../Sprites/block.png")) {
-        //TODO handle exception
+
+    try {
+        if (!powerUpTexture.loadFromFile("../Sprites/block.png")) {
+            throw std::runtime_error("File not found: ../Sprites/block.png");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
 
-    if (!coinTexture.loadFromFile("../Sprites/coin.png")) {
-        //TODO handle exception
-    }
 
+    try {
+        if (!coinTexture.loadFromFile("../Sprites/coin.png")) {
+            throw std::runtime_error("File not found: ../Sprites/coin.png");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
+    }
 }
 
 void Map::draw(sf::RenderWindow &window){
@@ -81,7 +122,11 @@ void Map::draw(sf::RenderWindow &window){
         window.draw(m);
     for (auto n : coins)
         window.draw(n);
-    coveredDistance = clock.getElapsedTime().asSeconds() * INIT_SPEEDL;
+    if(StateGame* sg = dynamic_cast<StateGame*>(Game::getInstance()->getState())){
+        acceleration = 1/sg->getAcceleration() *0.5f ;
+        coveredDistance = clock.getElapsedTime().asSeconds() * INIT_SPEEDL * acceleration;
+    }
+
     totalDistance += coveredDistance;
     if (coveredDistance >= 100)
         notify(Game::getInstance()->getPlayer(), Event::EVENT_100DISTANCE);
@@ -92,12 +137,14 @@ void Map::draw(sf::RenderWindow &window){
 
 void Map::moveBackground() {
     for (unsigned short int i = 0; i < backgroundSprites.size(); i++){
-        float movement = INIT_SPEEDB;
-        backgroundSprites.at(i).move(-movement,0.0f);
-        if (backgroundSprites.at(i).getPosition().x <= 0 - backgroundSprites.at(i).getLocalBounds().width * backgroundSprites.at(i).getScale().x){
-            sf::Vector2f position(backgroundSprites.at((i+1)%backgroundSprites.size()).getPosition().x - 1
-                    + backgroundSprites.at((i+1)%backgroundSprites.size()).getLocalBounds().width * backgroundSprites.at((i+1)%backgroundSprites.size()).getScale().x - 1, 0.0f);
-            backgroundSprites.at(i).setPosition(position);
+        if (StateGame* sg = dynamic_cast<StateGame*>(Game::getInstance()->getState())) {
+            float movement = INIT_SPEEDB * acceleration;
+            backgroundSprites.at(i).move(-movement,0.0f);
+            if (backgroundSprites.at(i).getPosition().x < 0 - backgroundSprites.at(i).getGlobalBounds().width) {
+                sf::Vector2f position(backgroundSprites.at((i + 1) % backgroundSprites.size()).getPosition().x
+                                  + backgroundSprites.at((i + 1) % backgroundSprites.size()).getGlobalBounds().width - 5.0f, 0.0f);
+                backgroundSprites.at(i).setPosition(position);
+            }
         }
     }
 }
@@ -105,24 +152,29 @@ void Map::moveBackground() {
 
 void Map::moveLand() {
     for (unsigned short int j = 0; j < landSprites.size(); j++){
-        float movement =INIT_SPEEDL;
-        landSprites.at(j).move(-movement, 0);
-        if (landSprites.at(j).getPosition().x <= 0 - landSprites.at(j).getLocalBounds().width * landSprites.at(j).getScale().x){
-           sf::Vector2f position(landSprites.at((j+1)%landSprites.size()).getPosition().x - 2
-                    + landSprites.at((j+1)%landSprites.size()).getLocalBounds().width * landSprites.at((j+1)%landSprites.size()).getScale().x-1, LHEIGHT);
-           landSprites.at(j).setPosition(position);
+        if (StateGame* sg = dynamic_cast<StateGame*>(Game::getInstance()->getState())) {
+            float movement = INIT_SPEEDL * acceleration;
+            landSprites.at(j).move(-movement, 0);
+            if (landSprites.at(j).getPosition().x <= 0 - landSprites.at(j).getGlobalBounds().width){
+                sf::Vector2f position(landSprites.at((j+1)%landSprites.size()).getPosition().x - 5.0f
+                + landSprites.at((j+1)%landSprites.size()).getGlobalBounds().width, LHEIGHT);
+                landSprites.at(j).setPosition(position);
+            }
         }
     }
 }
 
 void Map::moveGrass() {
     for (unsigned short int k = 0; k < grassSprites.size(); k++){
-        float movement =INIT_SPEEDL;
-        grassSprites.at(k).move(-movement, 0);
-        if (grassSprites.at(k).getPosition().x <= 0 - grassSprites.at(k).getLocalBounds().width * grassSprites.at(k).getScale().x){
-            sf::Vector2f position(grassSprites.at((k+1)%grassSprites.size()).getPosition().x
-                                  + grassSprites.at((k+1)%grassSprites.size()).getLocalBounds().width * grassSprites.at((k+1)%grassSprites.size()).getScale().x-1, LHEIGHT - grassTexture.getSize().y + 2);
-            grassSprites.at(k).setPosition(position);
+        if (StateGame* sg = dynamic_cast<StateGame*>(Game::getInstance()->getState())){
+            float movement =INIT_SPEEDL * acceleration;
+            grassSprites.at(k).move(-movement, 0);
+            if (grassSprites.at(k).getPosition().x <= 0 - grassSprites.at(k).getGlobalBounds().width) {
+                sf::Vector2f position(grassSprites.at((k + 1) % grassSprites.size()).getPosition().x
+                                      + grassSprites.at((k + 1) % grassSprites.size()).getGlobalBounds().width - 5.0f,
+                                      LHEIGHT - grassTexture.getSize().y + 2);
+                grassSprites.at(k).setPosition(position);
+            }
         }
     }
 }
@@ -158,7 +210,7 @@ void Map::checkCollisions(Player& player) {
     for (int i = 0; i<coins.size(); i++){
         if (player.getGlobalBounds().intersects(coins.at(i).getGlobalBounds())) {
             std::cout << "coin" << std::endl;
-            coins.erase(coins.begin()+i);
+            coins.erase(coins.begin() + i);
             pickedCoins++;
         }
     }
@@ -168,17 +220,20 @@ void Map::checkCollisions(Player& player) {
             if (form->getBodySprite().getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())
             || form->getTongueSprite().getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())) {
                 player.changeForm();
-                for (auto k : obstacles)
-                    obstacles.pop_back();
+                 obstacles.clear();
             }
         }
         if (player.getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())) {
             if (form) {
                 std::cerr << "hai parato un missile" << std::endl;
-                obstacles.pop_back();
+                for (int n = 0; n<obstacles.size(); n++) {
+                    if (player.getGlobalBounds().intersects(obstacles.at(n)->getObstacleSprite().getGlobalBounds())) {
+                        obstacles.erase(obstacles.begin() + n);
+                    }
+                }
             }
             else {
-                if (Yoshi *form = dynamic_cast<Yoshi *>(player.getForm())) {
+                if (Yoshi *formy = dynamic_cast<Yoshi *>(player.getForm())) {
                     player.kill();
                     currentScore = coveredDistance + pickedCoins;
                     notify(player, Event::EVENT_DEATH);
@@ -191,8 +246,7 @@ void Map::checkCollisions(Player& player) {
                 }
                 else {
                     player.changeForm();
-                    for (auto k : obstacles)
-                        obstacles.pop_back();
+                    obstacles.clear();
                 }
             }
         }
@@ -200,7 +254,7 @@ void Map::checkCollisions(Player& player) {
 }
 
 void Map::moveObstacle() {
-    float movement =INIT_SPEEDL;
+    float movement =INIT_SPEEDL*(1+acceleration*0.1f);
     for (int j = 0; j < obstacles.size(); j++)
         obstacles.at(j)->move(-movement, 0);
     for (auto i : obstacles){
@@ -222,7 +276,7 @@ if (rndm < 50 || formg || formb)
 
 void Map::movePowerUp() {
     for (int m = 0; m < powerUpSprite.size(); m++){
-        powerUpSprite.at(m).move(-INIT_SPEEDL,0);
+        powerUpSprite.at(m).move(-INIT_SPEEDL*(1+acceleration*0.1f),0);
         if (powerUpSprite.at(m).getPosition().x < 0 - powerUpSprite.at(m).getGlobalBounds().width - 3)
             powerUpSprite.pop_back();
     }
@@ -252,7 +306,7 @@ void Map::instantiateCoin() {
 
 void Map::moveCoin() {
     for (int n = 0; n < coins.size(); n++){
-        coins.at(n).move(-INIT_SPEEDL,0);
+        coins.at(n).move(-INIT_SPEEDL*(1+acceleration*0.1f),0);
         if (coins.at(n).getPosition().x < 0 - coins.at(n).getGlobalBounds().width - 3)
             coins.erase(coins.begin());
     }
@@ -261,6 +315,7 @@ void Map::moveCoin() {
 void Map::reset() {
     obstacles.clear();
     powerUpSprite.clear();
+    coins.clear();
     currentScore = 0;
     coveredDistance = 0;
     pickedCoins = 0;
@@ -289,4 +344,8 @@ int Map::getCurrentScore() const {
 
 int Map::getCoveredDistance() const {
     return coveredDistance;
+}
+
+const sf::Clock &Map::getClock() const {
+    return clock;
 }

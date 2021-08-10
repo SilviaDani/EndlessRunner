@@ -33,6 +33,7 @@ public:
     void setTotalDistance(int totalDistance);
     int getCurrentScore() const;
     int getCoveredDistance() const;
+    const sf::Clock &getClock() const;
 private:
     sf:: Texture backgroundTexture;
     std:: vector <sf::Sprite>backgroundSprites;
@@ -55,6 +56,7 @@ private:
     int totalDistance = 0;
     int currentScore = 0;
     int pickedCoins = 0;
+    float acceleration = 1.0f;
 };
 
 

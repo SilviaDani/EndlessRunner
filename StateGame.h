@@ -13,11 +13,13 @@ public:
     void draw(sf::RenderWindow& window) override;
     void update() override;
     void changeState(State* nextState) override;
+    float getAcceleration() const;
 private:
     sf::Clock clock;
     sf:: Clock coinClock;
     float timeNextObstacle = 3.f;
     float coinTime = 3.7f;
+    float acceleration;
 };
 
 

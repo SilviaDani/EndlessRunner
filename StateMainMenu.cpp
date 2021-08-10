@@ -8,16 +8,28 @@
 
 StateMainMenu::StateMainMenu(Game *gameptr) {
     game = gameptr;
-    if (!texture.loadFromFile("../Sprites/mainMenuBackground.jpg")) {
-        //TODO handle exception
+    try {
+        if (!texture.loadFromFile("../Sprites/mainMenuBackground.jpg")){
+            throw std::runtime_error("File not found: ../Sprites/mainMenuBackground.jpg");
+        }
     }
-
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
+    }
     sprite.setTexture(texture);
     sprite.setPosition(0, 0);
     sprite.setScale(3,3.2);
 
-    if(!font.loadFromFile("../Fonts/arial.ttf")){
-        //TODO handle exception
+
+    try {
+        if (!font.loadFromFile("../Fonts/arial.ttf")){
+            throw std::runtime_error("File not found: ../Fonts/arial.ttf");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     text.setFont(font);
     text.setCharacterSize(24);
@@ -25,8 +37,15 @@ StateMainMenu::StateMainMenu(Game *gameptr) {
     text.setPosition(SCREENWIDTH/2 - 30, SCREENHEIGHT - 60);
     text.setString("Press SPACE\nto play");
 
-    if(!titleFont.loadFromFile("../Fonts/pixel.TTF")){
-        //TODO handle exception
+
+    try {
+        if (!titleFont.loadFromFile("../Fonts/pixel.TTF")){
+            throw std::runtime_error("File not found: ../Fonts/pixel.TTF");
+        }
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
     }
     title.setFont(titleFont);
     title.setCharacterSize(40);
