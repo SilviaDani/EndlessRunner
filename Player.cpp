@@ -3,6 +3,8 @@
 //
 #include <iostream>
 #include "Player.h"
+#include "Game.h"
+#include "StateGame.h"
 #include <math.h>
 
 Player::Player() {
@@ -55,7 +57,6 @@ void Player::reset() {
         setPosition(200, LHEIGHT - y->getSprite().getGlobalBounds().height + 2);
         y->resetClock();
     }
-
 }
 
 Form *Player::getForm() const {
@@ -74,9 +75,10 @@ Yoshi::Yoshi(float y) {
         exit(-1);
     }
     int nFrames = 2;
-    sprite = AnimatedSprite(texture, texture.getSize().y, texture.getSize().x/nFrames, nFrames);
+    int nRows = 2;
+    sprite = AnimatedSprite(texture, texture.getSize().y/nRows, texture.getSize().x/nFrames, nFrames);
     sprite.setPosition(200, y);
-    sprite.setScale(-3,3);
+    sprite.setScale(3,3);
     resetClock();
 }
 
@@ -88,7 +90,13 @@ void Yoshi::move() {
 }
 
 void Yoshi::draw(sf::RenderWindow &window) {
-    sprite.draw(window, 9); //TODO cambia frequenza via via che accelera
+    if(StateGame* sg = dynamic_cast<StateGame*>(Game::getInstance()->getState())){
+        if (sprite.getPosition().y >= LHEIGHT - sprite.getGlobalBounds().height - 3){
+            sprite.draw(window, 9/sg->getAcceleration(), 0);
+        }
+        sprite.draw(window,9/sg->getAcceleration(), 1);
+    }
+
 }
 
 Form *Yoshi::nextForm() {
@@ -128,9 +136,10 @@ Yoshi::Yoshi() {
         exit(-1);
     }
     int nFrames = 2;
-    sprite = AnimatedSprite(texture, texture.getSize().y, texture.getSize().x/nFrames, nFrames);
+    int nRows = 2;
+    sprite = AnimatedSprite(texture, texture.getSize().y/nRows, texture.getSize().x/nFrames, nFrames);
     sprite.setPosition(200, LHEIGHT - sprite.getGlobalBounds().height + 2);
-    sprite.setScale(-3,3);
+    sprite.setScale(3,3);
     resetClock();
 }
 
@@ -145,8 +154,8 @@ Bike::Bike(float y) {
         std::cerr << exc.what() << std::endl;
         exit(-1);
     }
-    int nFrames = 1;
-    sprite = AnimatedSprite(texture, texture.getSize().y, texture.getSize().x/nFrames, nFrames);//FIXME manca la texture di yoshibike
+    int nFrames = 2;
+    sprite = AnimatedSprite(texture, texture.getSize().y, texture.getSize().x/nFrames, nFrames);
     sprite.setPosition(200, y);
     sprite.setScale(3,3);
 }
@@ -173,7 +182,9 @@ void Bike::move() {
 }
 
 void Bike::draw(sf::RenderWindow &window) {
-   sprite.draw(window, 1);
+    if(StateGame* sg = dynamic_cast<StateGame*>(Game::getInstance()->getState())){
+        sprite.draw(window, 10/sg->getAcceleration());
+    }
 }
 
 Form *Bike::nextForm() {
@@ -191,10 +202,11 @@ Giant::Giant(float y) {
         std::cerr << exc.what() << std::endl;
         exit(-1);
     }
-    bodySprite.setTexture(bodyTexture);
+    int nFrames = 3;
+    bodySprite = AnimatedSprite(bodyTexture, bodyTexture.getSize().y, bodyTexture.getSize().x/nFrames, nFrames);
     bodySprite.setOrigin(0, bodySprite.getLocalBounds().height - 2);
-    bodySprite.setPosition(-100, LHEIGHT);
-    bodySprite.setScale(0.4, 0.4);
+    bodySprite.setPosition(-93, LHEIGHT - 27);
+    bodySprite.setScale(14, 14);
 
 
     try {
@@ -221,8 +233,7 @@ Giant::Giant(float y) {
         std::cerr << exc.what() << std::endl;
         exit(-1);
     }
-    int nFrames = 1;
-    sprite = AnimatedSprite(texture, texture.getSize().y, texture.getSize().x/nFrames, nFrames); //FIXME;
+    sprite = AnimatedSprite(texture, texture.getSize().y, texture.getSize().x, 1);
     sprite.setScale(0.4,0.4);
     startingPosition = sf::Vector2f ((bodySprite.getGlobalBounds().width)/2 + (tongueSprite.getGlobalBounds().width)*
                                                                                   sin(acos((LHEIGHT-(sprite.getGlobalBounds().height)/2 - (bodySprite.getPosition().y -
@@ -249,7 +260,9 @@ void Giant::move() {
 }
 
 void Giant::draw(sf::RenderWindow &window) {
-    window.draw(bodySprite);
+    if(StateGame* sg = dynamic_cast<StateGame*>(Game::getInstance()->getState())){
+        bodySprite.draw(window, 4/sg->getAcceleration());
+    }
     window.draw(tongueSprite);
     sprite.draw(window, 1);
 }
@@ -262,7 +275,7 @@ const sf::Sprite &Giant::getTongueSprite() const {
     return tongueSprite;
 }
 
-const sf::Sprite &Giant::getBodySprite() const {
+AnimatedSprite Giant::getBodySprite(){
     return bodySprite;
 }
 
@@ -277,10 +290,11 @@ GravityInverter::GravityInverter(float y) {
         std::cerr << exc.what() << std::endl;
         exit(-1);
     }
-    int nFrames = 1;
-    sprite = AnimatedSprite(texture, texture.getSize().y, texture.getSize().x/nFrames, nFrames); //FIXME
+    int nFrames = 2;
+    int nRows = 2;
+    sprite = AnimatedSprite(texture, texture.getSize().y/nRows, texture.getSize().x/nFrames, nFrames);
     sprite.setPosition(200, y);
-    sprite.setScale(0.3,0.3);
+    sprite.setScale(3,3);
     sprite.setOrigin(sprite.getOrigin().x, sprite.getOrigin().y + sprite.getLocalBounds().height/2);
 }
 
@@ -294,7 +308,13 @@ void GravityInverter::invertGravity() {
 }
 
 void GravityInverter::draw(sf::RenderWindow &window) {
-    sprite.draw(window,1);
+    if(StateGame* sg = dynamic_cast<StateGame*>(Game::getInstance()->getState())){
+        if (sprite.getPosition().y >= LHEIGHT - sprite.getGlobalBounds().height - 3 && gravity > 0 ||
+            sprite.getPosition().y <= sprite.getGlobalBounds().height + 3 && gravity < 0){
+            sprite.draw(window, 9/sg->getAcceleration(), 1);
+        }
+        sprite.draw(window,5, 0);
+    }
 }
 
 Form *GravityInverter::nextForm() {

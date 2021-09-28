@@ -20,13 +20,13 @@ void StateGame::update() {
     game->getMap().moveGrass();
     game->getMap().instantiatePowerUp(game->getPlayer());
     game->getMap().movePowerUp();
-    acceleration = 1/(game->getMap().getClock().getElapsedTime().asSeconds()/10 + 1);
+    acceleration = 1/(game->getMap().getClock().getElapsedTime().asSeconds()/20 + 1);
     if (clock.getElapsedTime().asSeconds() > (timeNextObstacle * acceleration)) {
         timeNextObstacle = rand()%4 + 2 + (rand()%101)/ 100;
         game->getMap().instantiateObstacle();
         clock.restart();
     }
-    game->getMap().moveObstacle();
+   game->getMap().moveObstacle();
     if (coinClock.getElapsedTime().asSeconds() >= (coinTime * acceleration)){
         coinTime = rand()%4 + 2 + (rand()%101)/ 100;
         game->getMap().instantiateCoin();

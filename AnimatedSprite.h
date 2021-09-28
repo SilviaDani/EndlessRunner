@@ -11,24 +11,18 @@ public:
     AnimatedSprite() = default;
     AnimatedSprite(sf::Texture &texture, int frameHeight, int frameWidth, int nFrames);
     void draw(sf::RenderWindow &window, int frequency);
+    void draw(sf::RenderWindow &window, int frequency, int row);
     void setPosition(float x, float y);
     sf::Rect<float> getGlobalBounds();
     const sf::Sprite getSprite() const;
     void setScale(float x, float y);
     void move(float x, float y);
-
     sf::Vector2f getPosition();
-
     void setOrigin(float x, float y);
-
     sf::Vector2f getOrigin();
-
     sf::Rect<float> getLocalBounds();
-
     sf::Vector2f getScale();
-
     void setPosition(sf::Vector2f vector2);
-
 private:
     int frames;
     sf::IntRect intRect;

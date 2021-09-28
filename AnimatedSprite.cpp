@@ -22,6 +22,19 @@ void AnimatedSprite::draw(sf::RenderWindow &window, int frequency) {
     window.draw(sprite);
 }
 
+void AnimatedSprite::draw(sf::RenderWindow &window, int frequency, int row) {
+    intRect.top = intRect.height * row;
+    if (clock.getElapsedTime().asMilliseconds() >= 1000/frequency){
+        if (intRect.left == intRect.width * frames)
+            intRect.left = 0;
+        else
+            intRect.left += intRect.width;
+        sprite.setTextureRect(intRect);
+        clock.restart();
+    }
+    window.draw(sprite);
+}
+
 void AnimatedSprite::setPosition(float x, float y) {
     sprite.setPosition(x, y);
 }

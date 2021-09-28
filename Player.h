@@ -71,11 +71,11 @@ public:
     void move() override;
     void draw(sf::RenderWindow &window) override;
     Form* nextForm() override;
-    const sf::Sprite &getBodySprite() const;
+    AnimatedSprite getBodySprite();
     const sf::Sprite &getTongueSprite() const;
 private:
     sf:: Texture bodyTexture;
-    sf:: Sprite bodySprite;
+    AnimatedSprite bodySprite;
     sf:: Texture tongueTexture;
     sf:: Sprite tongueSprite;
     sf:: Vector2f startingPosition;
