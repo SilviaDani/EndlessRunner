@@ -120,8 +120,8 @@ void Map::draw(sf::RenderWindow &window){
         l->draw(window);
     for (auto m : powerUpSprite)
         window.draw(m);
-    for (auto n : coins)
-        window.draw(n);
+    for (int n = 0; n < coins.size(); n++)
+        coins.at(n).draw(window, 5);
     if(StateGame* sg = dynamic_cast<StateGame*>(Game::getInstance()->getState())){
         acceleration = 1/sg->getAcceleration() *0.5f ;
         coveredDistance = clock.getElapsedTime().asSeconds() * INIT_SPEEDL * acceleration;
@@ -297,11 +297,11 @@ void Map::instantiatePowerUp(Player& player) {
 
 
 void Map::instantiateCoin() {
-        sf:: Sprite coinSprite;
-        coinSprite.setTexture(coinTexture);
-        coinSprite.setPosition(SCREENWIDTH + 2,  rand()%((int)(LHEIGHT - coinSprite.getGlobalBounds().height*2) - 1));
-        coinSprite.setScale(1.6,1.6);
-        coins.push_back(coinSprite);
+    int nFrames = 4;
+    AnimatedSprite coinSprite = AnimatedSprite(coinTexture, coinTexture.getSize().y, coinTexture.getSize().x/nFrames, nFrames);
+    coinSprite.setPosition(SCREENWIDTH + 2,  rand()%((int)(LHEIGHT - coinSprite.getGlobalBounds().height*2) - 1));
+    coinSprite.setScale(2.3,2.3);
+    coins.push_back(coinSprite);
 }
 
 void Map::moveCoin() {

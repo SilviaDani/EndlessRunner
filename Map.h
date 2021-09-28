@@ -47,7 +47,7 @@ private:
     sf:: Texture powerUpTexture;
     std:: vector <sf::Sprite>powerUpSprite;
     sf:: Texture coinTexture;
-    std:: vector <sf::Sprite>coins;
+    std:: vector <AnimatedSprite>coins;
     sf:: Clock clock;
     sf:: Text distance;
     sf:: Font font;
