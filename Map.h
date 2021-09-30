@@ -34,6 +34,7 @@ public:
     int getCurrentScore() const;
     int getCoveredDistance() const;
     const sf::Clock &getClock() const;
+    int getCoinsSize() const;
 private:
     sf:: Texture backgroundTexture;
     std:: vector <sf::Sprite>backgroundSprites;

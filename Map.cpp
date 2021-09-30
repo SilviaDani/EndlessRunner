@@ -220,7 +220,7 @@ void Map::checkCollisions(Player& player) {
             if (form->getBodySprite().getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())
             || form->getTongueSprite().getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())) {
                 player.changeForm();
-                 obstacles.clear();
+                obstacles.clear();
             }
         }
         if (player.getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())) {
@@ -348,4 +348,8 @@ int Map::getCoveredDistance() const {
 
 const sf::Clock &Map::getClock() const {
     return clock;
+}
+
+int Map::getCoinsSize() const{
+    return coins.size();
 }
