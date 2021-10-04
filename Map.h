@@ -34,7 +34,12 @@ public:
     int getCurrentScore() const;
     int getCoveredDistance() const;
     const sf::Clock &getClock() const;
-    int getCoinsSize() const;
+    std:: vector<AnimatedSprite>getCoins() const;
+    void setPositionCoin(int i, float x, float y);
+    std:: vector<Obstacle*> getObstacles() const;
+    std:: vector<sf::Sprite> getPowerUp() const;
+    void setPowerUpPosition(float x, float y);
+    int getPickedCoins() const;
 private:
     sf:: Texture backgroundTexture;
     std:: vector <sf::Sprite>backgroundSprites;

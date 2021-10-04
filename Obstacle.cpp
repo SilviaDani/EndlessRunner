@@ -34,7 +34,7 @@ Rocket::Rocket() {
         exit(-1);
     }
     obstacleSprite.setTexture(obstacleTexture);
-    obstacleSprite.setScale(-0.1 , 0.1);
+    obstacleSprite.setScale(0.1 , 0.1);
     if (Giant* form = dynamic_cast<Giant*>(Game::getInstance()->getPlayer().getForm())){
         float yCoordinate = -1.0f;
         while(yCoordinate < form->getBodySprite().getGlobalBounds().top + 100 || yCoordinate > LHEIGHT - form->getSprite().getGlobalBounds().height - 0.5f)

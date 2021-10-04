@@ -9,7 +9,7 @@
 
 class Obstacle {
 public:
-    virtual void doAction()=0;
+    virtual void doAction() = 0;
     void draw(sf::RenderWindow &window);
     void setPosition(float x, float y);
     void move(float x, float y);

@@ -15,7 +15,7 @@ public:
     void move() const;
     sf::Vector2f getPosition() const;
     virtual void setPosition(float x, float y);
-    sf::Rect<float> getGlobalBounds() const;
+    sf::FloatRect getGlobalBounds() const;
     void changeForm();
     bool isAlive() const;
     void kill();

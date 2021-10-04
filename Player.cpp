@@ -31,7 +31,7 @@ void Form::setPosition(float x, float y) {
     sprite.setPosition(x, y);
 }
 
-sf::Rect<float> Player::getGlobalBounds() const {
+sf::FloatRect Player::getGlobalBounds() const {
     return form->getSprite().getGlobalBounds();
 }
 

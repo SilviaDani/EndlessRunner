@@ -181,13 +181,13 @@ void Map::moveGrass() {
 
 
 void Map::checkCollisions(Player& player) {
-    if (Giant* form = dynamic_cast<Giant*>(player.getForm())){
+    if (dynamic_cast<Giant*>(player.getForm())){
         if (player.getPosition().y - (player.getGlobalBounds().height)/2 < 0)
             player.setPosition(player.getPosition().x, (player.getGlobalBounds().height)/2);
         if (player.getPosition().y + (player.getGlobalBounds().height)  > LHEIGHT + 2)
             player.setPosition(player.getPosition().x, LHEIGHT - (player.getGlobalBounds().height) + 2);
     }
-    else if (GravityInverter* form = dynamic_cast<GravityInverter*>(player.getForm())){
+    else if (dynamic_cast<GravityInverter*>(player.getForm())){
         if (player.getPosition().y - (player.getGlobalBounds().height)/2 < 0)
             player.setPosition(player.getPosition().x, (player.getGlobalBounds().height)/2);
         if (player.getPosition().y + (player.getGlobalBounds().height)/2  > LHEIGHT + 2)
@@ -233,7 +233,7 @@ void Map::checkCollisions(Player& player) {
                 }
             }
             else {
-                if (Yoshi *formy = dynamic_cast<Yoshi *>(player.getForm())) {
+                if (dynamic_cast<Yoshi *>(player.getForm())) {
                     player.kill();
                     currentScore = coveredDistance + pickedCoins;
                     notify(player, Event::EVENT_DEATH);
@@ -267,7 +267,7 @@ void Map::instantiateObstacle() {
     int rndm = rand() % 100;
     Giant* formg = dynamic_cast<Giant*>(Game::getInstance()->getPlayer().getForm());
     Bike* formb = dynamic_cast<Bike*>(Game::getInstance()->getPlayer().getForm());
-if (rndm < 50 || formg || formb)
+    if (rndm < 50 || formg || formb)
         tmp = rocketFactory.factoryMethod();
     else
         tmp = stoneFactory.factoryMethod();
@@ -350,6 +350,29 @@ const sf::Clock &Map::getClock() const {
     return clock;
 }
 
-int Map::getCoinsSize() const{
-    return coins.size();
+std::vector<Obstacle *> Map::getObstacles() const {
+    return obstacles;
 }
+
+std::vector<AnimatedSprite> Map::getCoins() const {
+    return coins;
+}
+
+void Map::setPositionCoin(int i, float x, float y) {
+    coins.at(i).setPosition(x, y);
+}
+
+std::vector<sf::Sprite> Map::getPowerUp() const{
+    return powerUpSprite;
+}
+
+void Map::setPowerUpPosition(float x, float y) {
+    powerUpSprite.at(0).setPosition(x, y);
+}
+
+int Map::getPickedCoins() const {
+    return pickedCoins;
+}
+
+
+
