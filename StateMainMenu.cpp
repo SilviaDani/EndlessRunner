@@ -3,7 +3,6 @@
 //
 
 #include "StateMainMenu.h"
-#include "StateGame.h"
 
 
 StateMainMenu::StateMainMenu(Game *gameptr) {

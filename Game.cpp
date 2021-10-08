@@ -31,7 +31,7 @@ void Game::draw(sf::RenderWindow &window) {
 }
 
 void Game::save() {
-    //highscore, total covered distance, //TODO total runs played
+    //highscore, total covered distance
     std::ofstream saveFile("../saves.txt");
     if (saveFile.is_open()){
         saveFile << map.getHighscore() << ",";

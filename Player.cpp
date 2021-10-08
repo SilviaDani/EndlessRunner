@@ -261,7 +261,7 @@ void Giant::move() {
 
 void Giant::draw(sf::RenderWindow &window) {
     if(StateGame* sg = dynamic_cast<StateGame*>(Game::getInstance()->getState())){
-        bodySprite.draw(window, 4/sg->getAcceleration());
+        bodySprite.draw(window, 2/sg->getAcceleration());
     }
     window.draw(tongueSprite);
     sprite.draw(window, 1);

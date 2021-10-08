@@ -1,8 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
 #include "Map.h"
-#include "CONSTANTS.h"
 #include "Game.h"
 #include "StateMainMenu.h"
 #include "StateGameOver.h"
