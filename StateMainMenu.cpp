@@ -51,6 +51,20 @@ StateMainMenu::StateMainMenu(Game *gameptr) {
     title.setFillColor(sf::Color::Red);
     title.setPosition(SCREENWIDTH/2 - 80, 30);
     title.setString("YOSHI RUN");
+
+
+    try {
+        if (!buffer.loadFromFile("../Sounds/mainMenuMusic.wav"))
+            throw std::runtime_error("File not found: ../Sounds/mainMenuMusic.wav");
+        mainMenuMusic.setBuffer(buffer);
+        mainMenuMusic.setLoop(true);
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
+    }
+
+    playMusic();
 }
 
 void StateMainMenu::draw(sf::RenderWindow &window) {
@@ -67,5 +81,12 @@ void StateMainMenu::changeState(State *nextState) {
     game->setState(nextState);
     game->getMap().reset();
     delete tmpState;
+}
 
+void StateMainMenu::playMusic() {
+    mainMenuMusic.play();
+}
+
+void StateMainMenu::stopMusic() {
+    mainMenuMusic.stop();
 }

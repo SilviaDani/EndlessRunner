@@ -45,6 +45,17 @@ StateGameOver::StateGameOver(Game *gameptr) {
     title.setPosition(SCREENWIDTH/2 - 100, 30);
     title.setString("GAME OVER");
 
+
+    try {
+        if (!buffer.loadFromFile("../Sounds/gameOverMusic.wav"))
+            throw std::runtime_error("File not found: ../Sounds/gameOverMusic.wav");
+        gameOverMusic.setBuffer(buffer);
+        gameOverMusic.setLoop(false);
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
+    }
 }
 
 void StateGameOver::draw(sf::RenderWindow &window) {
@@ -57,7 +68,7 @@ void StateGameOver::draw(sf::RenderWindow &window) {
 void StateGameOver::update() {}
 
 void StateGameOver::changeState(State *nextState) {
-    if (State* s = dynamic_cast<StateGame*>(nextState)){
+    if (dynamic_cast<StateGame*>(nextState)){
         game->getMap().reset();
         game->getPlayer().reset();
     }
@@ -68,5 +79,13 @@ void StateGameOver::changeState(State *nextState) {
         game->setState(nextState);
         delete tmpState;
     }
+}
+
+void StateGameOver::playMusic() {
+    gameOverMusic.play();
+}
+
+void StateGameOver::stopMusic() {
+    gameOverMusic.stop();
 }
 

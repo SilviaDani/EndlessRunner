@@ -10,6 +10,16 @@
 
 Player::Player() {
     form = new Yoshi();
+    try {
+        if (!buffer.loadFromFile("../Sounds/deathSound.wav"))
+            throw std::runtime_error("File not found: ../Sounds/deathSound.wav");
+        deathSound.setBuffer(buffer);
+        deathSound.setLoop(false);
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
+    }
 }
 
 const sf::Sprite Form::getSprite() const {
@@ -50,6 +60,7 @@ bool Player::isAlive() const{
 
 void Player::kill() {
     Player::alive = false;
+    deathSound.play();
 }
 
 void Player::reset() {

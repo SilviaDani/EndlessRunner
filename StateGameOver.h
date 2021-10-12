@@ -12,6 +12,8 @@ public:
     void draw(sf::RenderWindow& window) override;
     void update() override;
     void changeState(State* nextState) override;
+    void playMusic() override;
+    void stopMusic() override;
 private:
    // sf::Sprite sprite;
    // sf::Texture texture;
@@ -20,6 +22,8 @@ private:
     sf::Text title;
     sf::Text score;
     sf::Text text;
+    sf::SoundBuffer buffer;
+    sf::Sound gameOverMusic;
 };
 
 

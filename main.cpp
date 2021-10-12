@@ -22,12 +22,18 @@ int main() {
                 }
             }
             if (State* state = dynamic_cast<StateMainMenu*>(game->getState())){
-                if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
+                if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
+                    game->getState()->stopMusic();
                     state->changeState(new StateGame(game));
+                    game->getState()->playMusic();
+                }
             }
             if (State* state = dynamic_cast<StateGameOver*>(game->getState())) {
-                if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
+                if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
+                    game->getState()->stopMusic();
                     state->changeState(new StateGame(game));
+                    game->getState()->playMusic();
+                }
                 if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape)
                     state->changeState(nullptr);
             }

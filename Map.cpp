@@ -107,6 +107,18 @@ Map::Map() {
         std::cerr << exc.what() << std::endl;
         exit(-1);
     }
+
+
+    try {
+        if (!buffer.loadFromFile("../Sounds/parrySound.wav"))
+            throw std::runtime_error("File not found: ../Sounds/parrySound.wav");
+        parrySound.setBuffer(buffer);
+        parrySound.setLoop(false);
+    }
+    catch (const std::runtime_error& exc) {
+        std::cerr << exc.what() << std::endl;
+        exit(-1);
+    }
 }
 
 void Map::draw(sf::RenderWindow &window){
@@ -152,7 +164,7 @@ void Map::moveBackground() {
 
 void Map::moveLand() {
     for (unsigned short int j = 0; j < landSprites.size(); j++){
-        if (StateGame* sg = dynamic_cast<StateGame*>(Game::getInstance()->getState())) {
+        if (dynamic_cast<StateGame*>(Game::getInstance()->getState())) {
             float movement = INIT_SPEEDL * acceleration;
             landSprites.at(j).move(-movement, 0);
             if (landSprites.at(j).getPosition().x <= 0 - landSprites.at(j).getGlobalBounds().width){
@@ -166,7 +178,7 @@ void Map::moveLand() {
 
 void Map::moveGrass() {
     for (unsigned short int k = 0; k < grassSprites.size(); k++){
-        if (StateGame* sg = dynamic_cast<StateGame*>(Game::getInstance()->getState())){
+        if (dynamic_cast<StateGame*>(Game::getInstance()->getState())){
             float movement =INIT_SPEEDL * acceleration;
             grassSprites.at(k).move(-movement, 0);
             if (grassSprites.at(k).getPosition().x <= 0 - grassSprites.at(k).getGlobalBounds().width) {
@@ -225,6 +237,7 @@ void Map::checkCollisions(Player& player) {
         }
         if (player.getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())) {
             if (form) {
+                parrySound.play();
                 std::cerr << "hai parato un missile" << std::endl;
                 for (int n = 0; n<obstacles.size(); n++) {
                     if (player.getGlobalBounds().intersects(obstacles.at(n)->getObstacleSprite().getGlobalBounds())) {
@@ -268,9 +281,9 @@ void Map::instantiateObstacle() {
     Giant* formg = dynamic_cast<Giant*>(Game::getInstance()->getPlayer().getForm());
     Bike* formb = dynamic_cast<Bike*>(Game::getInstance()->getPlayer().getForm());
     if (rndm < 50 || formg || formb)
-        tmp = rocketFactory.factoryMethod();
+        tmp = obstacleFactory.factoryMethod(ObstacleList::Rocket);
     else
-        tmp = stoneFactory.factoryMethod();
+        tmp = obstacleFactory.factoryMethod(ObstacleList::Stone);
     obstacles.push_back(tmp);
 }
 

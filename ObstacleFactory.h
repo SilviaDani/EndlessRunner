@@ -6,23 +6,13 @@
 #define ENDLESSRUNNER_OBSTACLEFACTORY_H
 #include "Obstacle.h"
 
+enum class ObstacleList{
+    Rocket, Stone
+};
+
 class ObstacleFactory {
 public:
-    virtual Obstacle* factoryMethod() = 0;
-};
-
-class StoneFactory: public ObstacleFactory{
-public:
-    Obstacle* factoryMethod() override{
-        return new Stone();
-    }
-};
-
-class RocketFactory: public ObstacleFactory{
-public:
-    Obstacle* factoryMethod() override{
-        return new Rocket();
-    }
+    Obstacle* factoryMethod(ObstacleList obstacle);
 };
 
 #endif //ENDLESSRUNNER_OBSTACLEFACTORY_H

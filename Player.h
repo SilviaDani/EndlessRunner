@@ -2,6 +2,8 @@
 // Created by danis on 20/12/2020.
 //
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 #ifndef ENDLESSRUNNER_YOSHI_H
 #define ENDLESSRUNNER_YOSHI_H
 #include "CONSTANTS.h"
@@ -25,6 +27,8 @@ protected:
     bool alive = true;
 private:
     Form* form = nullptr;
+    sf::SoundBuffer buffer;
+    sf::Sound deathSound;
 };
 
 class Form{

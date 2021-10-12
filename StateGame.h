@@ -13,13 +13,17 @@ public:
     void draw(sf::RenderWindow& window) override;
     void update() override;
     void changeState(State* nextState) override;
+    void playMusic() override;
+    void stopMusic() override;
     float getAcceleration() const;
 private:
     sf::Clock clock;
-    sf:: Clock coinClock;
+    sf::Clock coinClock;
     float timeNextObstacle = 3.f;
     float coinTime = 3.7f;
     float acceleration;
+    sf::SoundBuffer buffer;
+    sf::Sound gameMusic;
 };
 
 

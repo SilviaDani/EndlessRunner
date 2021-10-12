@@ -16,6 +16,8 @@ public:
     virtual void draw(sf::RenderWindow& window) = 0;
     virtual void update() = 0;
     virtual void changeState(State* nextState) = 0;
+    virtual void playMusic() = 0;
+    virtual void stopMusic() = 0;
 protected:
     Game* game;
 };
