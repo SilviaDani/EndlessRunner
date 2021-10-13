@@ -6,7 +6,6 @@
 #include "StateGameOver.h"
 
 
-
 StateGame::StateGame(Game* gameptr) {
     game = gameptr;
     clock.restart();
@@ -48,7 +47,6 @@ void StateGame::update() {
     if (!game->getPlayer().isAlive()) {
         game->getState()->stopMusic();
         changeState(new StateGameOver(game));
-        game->getState()->playMusic();
     }
 }
 

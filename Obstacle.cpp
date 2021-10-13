@@ -70,11 +70,11 @@ Stone::Stone() {
     obstacleSprite.setScale(0.65 , 0.65);
     obstacleSprite.setPosition(SCREENWIDTH + 2, 150);
     startingPosition = obstacleSprite.getPosition();
+    fallingTime = rand()%6 + 0.3f;
     clock.restart();
 }
 
 void Stone::doAction() {
-    float fallingTime = rand()%4 + 2.5f + (rand()%101)/100;
     if (clock.getElapsedTime().asSeconds()>fallingTime && !isFalling) {
         isFalling = true;
         hasTouchedGround = false;

@@ -9,6 +9,7 @@
 int main() {
     sf::RenderWindow window(sf::VideoMode(SCREENWIDTH,SCREENHEIGHT), "Endless Runner", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(100);
+    srand(time(NULL));
     Game *game= Game::getInstance();
     game->setWindow(&window);
     while (window.isOpen()){

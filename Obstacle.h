@@ -28,6 +28,7 @@ private:
     sf::Vector2f startingPosition;
     bool isFalling = false;
     bool hasTouchedGround = false;
+    float fallingTime;
 };
 
 class Rocket: public Obstacle{

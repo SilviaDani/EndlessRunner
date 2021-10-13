@@ -106,7 +106,8 @@ void Yoshi::draw(sf::RenderWindow &window) {
         if (sprite.getPosition().y >= LHEIGHT - sprite.getGlobalBounds().height - 3){
             sprite.draw(window, 9/sg->getAcceleration(), 0);
         }
-        sprite.draw(window,9/sg->getAcceleration(), 1);
+        else
+            sprite.draw(window, 9/sg->getAcceleration(), 1);
     }
 
 }

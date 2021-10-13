@@ -51,6 +51,7 @@ StateGameOver::StateGameOver(Game *gameptr) {
             throw std::runtime_error("File not found: ../Sounds/gameOverMusic.wav");
         gameOverMusic.setBuffer(buffer);
         gameOverMusic.setLoop(false);
+        gameOverMusic.play();
     }
     catch (const std::runtime_error& exc) {
         std::cerr << exc.what() << std::endl;
