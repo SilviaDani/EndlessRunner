@@ -195,14 +195,14 @@ public:
     /// thus you should always call this function in a loop
     /// to make sure that you process every pending event.
     /// \code
-    /// sf::Event event;
+    /// sf::EventType event;
     /// while (window.pollEvent(event))
     /// {
     ///    // process event...
     /// }
     /// \endcode
     ///
-    /// \param event Event to be returned
+    /// \param event EventType to be returned
     ///
     /// \return True if an event was returned, or false if the event queue was empty
     ///
@@ -222,14 +222,14 @@ public:
     /// is dedicated to events handling: you want to make this thread
     /// sleep as long as no new event is received.
     /// \code
-    /// sf::Event event;
+    /// sf::EventType event;
     /// if (window.waitEvent(event))
     /// {
     ///    // process event...
     /// }
     /// \endcode
     ///
-    /// \param event Event to be returned
+    /// \param event EventType to be returned
     ///
     /// \return False if any error occurred
     ///
@@ -528,7 +528,7 @@ private:
     /// stuff the window needs before the event is returned to the
     /// user.
     ///
-    /// \param event Event to filter
+    /// \param event EventType to filter
     ///
     ////////////////////////////////////////////////////////////
     bool filterEvent(const Event& event);
@@ -600,12 +600,12 @@ private:
 /// // The main loop - ends as soon as the window is closed
 /// while (window.isOpen())
 /// {
-///    // Event processing
-///    sf::Event event;
+///    // EventType processing
+///    sf::EventType event;
 ///    while (window.pollEvent(event))
 ///    {
 ///        // Request for closing the window
-///        if (event.type == sf::Event::Closed)
+///        if (event.type == sf::EventType::Closed)
 ///            window.close();
 ///    }
 ///

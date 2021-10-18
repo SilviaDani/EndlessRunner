@@ -14,7 +14,7 @@ class Player{
 public:
     Player();
     void draw(sf::RenderWindow &window);
-    void move() const;
+    void move(bool spacePressed) const;
     sf::Vector2f getPosition() const;
     virtual void setPosition(float x, float y);
     sf::FloatRect getGlobalBounds() const;
@@ -33,7 +33,7 @@ private:
 
 class Form{
 public:
-    virtual void move() = 0;
+    virtual void move(bool spacePressed) = 0;
     virtual void draw(sf::RenderWindow &window) = 0;
     virtual Form* nextForm() = 0;
     virtual ~Form() = default;
@@ -48,7 +48,7 @@ class Yoshi : public Form{
 public:
     Yoshi();
     Yoshi(float y);
-    void move() override;
+    void move(bool spacePressed) override;
     void draw(sf::RenderWindow &window) override;
     Form* nextForm() override;
     const sf::Clock &getClock() const;
@@ -60,7 +60,7 @@ private:
 class Bike : public Form{
 public:
     Bike(float y);
-    void move() override;
+    void move(bool spacePressed) override;
     void draw(sf::RenderWindow &window) override;
     Form* nextForm() override;
 private:
@@ -72,7 +72,7 @@ private:
 class Giant : public Form{
 public:
     Giant(float y);
-    void move() override;
+    void move(bool spacePressed) override;
     void draw(sf::RenderWindow &window) override;
     Form* nextForm() override;
     AnimatedSprite getBodySprite();
@@ -88,7 +88,7 @@ private:
 class GravityInverter : public Form{
 public:
     GravityInverter(float y);
-    void move() override;
+    void move(bool spacePressed) override;
     void draw(sf::RenderWindow &window) override;
     Form* nextForm() override;
     void invertGravity();

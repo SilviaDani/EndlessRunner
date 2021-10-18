@@ -12,7 +12,7 @@ public:
     void removeObserver(Observer* observer);
 protected:
     std::vector<Observer*> observers;
-    void notify(const Player& player, Event event);
+    void notify(const Player& player, EventType event);
 };
 
 

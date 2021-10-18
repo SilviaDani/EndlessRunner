@@ -24,8 +24,8 @@ Achievement::Achievement(std::string title, std::string text, std::string icon) 
     rect.setPosition(SCREENWIDTH/2 - sprite.getGlobalBounds().width - 16, 0);
     rect.setFillColor(sf::Color::Blue);
     try {
-        if (!font.loadFromFile("../Fonts/arial.ttf")){
-            throw std::runtime_error("File not found: ../Fonts/arial.ttf");
+        if (!font.loadFromFile("./Fonts/arial.ttf")){
+            throw std::runtime_error("File not found: ./Fonts/arial.ttf");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -66,10 +66,10 @@ const sf::RectangleShape &Achievement::getRect() const {
     return rect;
 }
 
-void AchievementManager::onNotify(const Player &player, Event event) {
+void AchievementManager::onNotify(const Player &player, EventType event) {
     switch (event)
        {
-           case Event::EVENT_DEATH:
+           case EventType::EVENT_DEATH:
                if (!player.isAlive())
                {
                    Achievement* ach = new Achievement("First death", "You've died for the first time");
@@ -79,7 +79,7 @@ void AchievementManager::onNotify(const Player &player, Event event) {
                    }
                }
                break;
-           case Event::EVENT_100DISTANCE:
+           case EventType::EVENT_100DISTANCE:
                Achievement* ach = new Achievement("Runner 100", "You've run 100 m");
                if(!isUnlocked(ach)){
                    unlock(ach);

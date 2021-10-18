@@ -220,18 +220,18 @@ public:
 
     union
     {
-        SizeEvent             size;              ///< Size event parameters (Event::Resized)
-        KeyEvent              key;               ///< Key event parameters (Event::KeyPressed, Event::KeyReleased)
-        TextEvent             text;              ///< Text event parameters (Event::TextEntered)
-        MouseMoveEvent        mouseMove;         ///< Mouse move event parameters (Event::MouseMoved)
-        MouseButtonEvent      mouseButton;       ///< Mouse button event parameters (Event::MouseButtonPressed, Event::MouseButtonReleased)
-        MouseWheelEvent       mouseWheel;        ///< Mouse wheel event parameters (Event::MouseWheelMoved) (deprecated)
-        MouseWheelScrollEvent mouseWheelScroll;  ///< Mouse wheel event parameters (Event::MouseWheelScrolled)
-        JoystickMoveEvent     joystickMove;      ///< Joystick move event parameters (Event::JoystickMoved)
-        JoystickButtonEvent   joystickButton;    ///< Joystick button event parameters (Event::JoystickButtonPressed, Event::JoystickButtonReleased)
-        JoystickConnectEvent  joystickConnect;   ///< Joystick (dis)connect event parameters (Event::JoystickConnected, Event::JoystickDisconnected)
-        TouchEvent            touch;             ///< Touch events parameters (Event::TouchBegan, Event::TouchMoved, Event::TouchEnded)
-        SensorEvent           sensor;            ///< Sensor event parameters (Event::SensorChanged)
+        SizeEvent             size;              ///< Size event parameters (EventType::Resized)
+        KeyEvent              key;               ///< Key event parameters (EventType::KeyPressed, EventType::KeyReleased)
+        TextEvent             text;              ///< Text event parameters (EventType::TextEntered)
+        MouseMoveEvent        mouseMove;         ///< Mouse move event parameters (EventType::MouseMoved)
+        MouseButtonEvent      mouseButton;       ///< Mouse button event parameters (EventType::MouseButtonPressed, EventType::MouseButtonReleased)
+        MouseWheelEvent       mouseWheel;        ///< Mouse wheel event parameters (EventType::MouseWheelMoved) (deprecated)
+        MouseWheelScrollEvent mouseWheelScroll;  ///< Mouse wheel event parameters (EventType::MouseWheelScrolled)
+        JoystickMoveEvent     joystickMove;      ///< Joystick move event parameters (EventType::JoystickMoved)
+        JoystickButtonEvent   joystickButton;    ///< Joystick button event parameters (EventType::JoystickButtonPressed, EventType::JoystickButtonReleased)
+        JoystickConnectEvent  joystickConnect;   ///< Joystick (dis)connect event parameters (EventType::JoystickConnected, EventType::JoystickDisconnected)
+        TouchEvent            touch;             ///< Touch events parameters (EventType::TouchBegan, EventType::TouchMoved, EventType::TouchEnded)
+        SensorEvent           sensor;            ///< Sensor event parameters (EventType::SensorChanged)
     };
 };
 
@@ -242,14 +242,14 @@ public:
 
 
 ////////////////////////////////////////////////////////////
-/// \class sf::Event
+/// \class sf::EventType
 /// \ingroup window
 ///
-/// sf::Event holds all the informations about a system event
+/// sf::EventType holds all the informations about a system event
 /// that just happened. Events are retrieved using the
 /// sf::Window::pollEvent and sf::Window::waitEvent functions.
 ///
-/// A sf::Event instance contains the type of the event
+/// A sf::EventType instance contains the type of the event
 /// (mouse moved, key pressed, window closed, ...) as well
 /// as the details about this particular event. Please note that
 /// the event parameters are defined in a union, which means that
@@ -262,19 +262,19 @@ public:
 ///
 /// Usage example:
 /// \code
-/// sf::Event event;
+/// sf::EventType event;
 /// while (window.pollEvent(event))
 /// {
 ///     // Request for closing the window
-///     if (event.type == sf::Event::Closed)
+///     if (event.type == sf::EventType::Closed)
 ///         window.close();
 ///
 ///     // The escape key was pressed
-///     if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
+///     if ((event.type == sf::EventType::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
 ///         window.close();
 ///
 ///     // The window was resized
-///     if (event.type == sf::Event::Resized)
+///     if (event.type == sf::EventType::Resized)
 ///         doSomethingWithTheNewSize(event.size.width, event.size.height);
 ///
 ///     // etc ...

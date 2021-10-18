@@ -32,7 +32,7 @@ void Game::draw(sf::RenderWindow &window) {
 
 void Game::save() {
     //highscore, total covered distance
-    std::ofstream saveFile("../saves.txt");
+    std::ofstream saveFile("./saves.txt");
     if (saveFile.is_open()){
         saveFile << map.getHighscore() << ",";
         saveFile << map.getTotalDistance() << ",";
@@ -46,8 +46,8 @@ void Game::save() {
 }
 
 void Game::load() {
-    if (std::ifstream("../saves.txt").good()){
-        std::ifstream saveFile ("../saves.txt");
+    if (std::ifstream("./saves.txt").good()){
+        std::ifstream saveFile ("./saves.txt");
         if(saveFile.is_open()){
             std::string highscoreString, totalDistanceString, nAchievementsString;
             std::getline(saveFile, highscoreString, ',');

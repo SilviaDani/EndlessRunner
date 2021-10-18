@@ -12,8 +12,8 @@ StateGame::StateGame(Game* gameptr) {
     coinClock.restart();
 
     try {
-        if (!buffer.loadFromFile("../Sounds/gameMusic.wav"))
-            throw std::runtime_error("File not found: ../Sounds/gameMusic.wav");
+        if (!buffer.loadFromFile("./Sounds/gameMusic.wav"))
+            throw std::runtime_error("File not found: ./Sounds/gameMusic.wav");
         gameMusic.setBuffer(buffer);
         gameMusic.setLoop(true);
     }
@@ -24,7 +24,7 @@ StateGame::StateGame(Game* gameptr) {
 }
 
 void StateGame::update() {
-    game->getPlayer().move();
+    game->getPlayer().move(isSpacePressed());
     game->getMap().checkCollisions(game->getPlayer());
     game->getMap().moveBackground();
     game->getMap().moveLand();
@@ -71,6 +71,13 @@ void StateGame::playMusic() {
 
 void StateGame::stopMusic() {
     gameMusic.stop();
+}
+
+bool StateGame::isSpacePressed() {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        return true;
+    else
+        return false;
 }
 
 

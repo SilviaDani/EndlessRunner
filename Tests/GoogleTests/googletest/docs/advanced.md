@@ -1938,7 +1938,7 @@ console output, replace the XML output, or provide a completely different form
 of output, such as a GUI or a database. You can also use test events as
 checkpoints to implement a resource leak checker, for example.
 
-### Defining Event Listeners
+### Defining EventType Listeners
 
 To define a event listener, you subclass either testing::TestEventListener or
 testing::EmptyTestEventListener The former is an (abstract) interface, where
@@ -1986,7 +1986,7 @@ Here's an example:
   };
 ```
 
-### Using Event Listeners
+### Using EventType Listeners
 
 To use the event listener you have defined, add an instance of it to the
 googletest event listener list (represented by class TestEventListeners - note
@@ -2020,7 +2020,7 @@ You can do so by adding one line:
 Now, sit back and enjoy a completely different output from your tests. For more
 details, see [sample9_unittest.cc].
 
-[sample9_unittest.cc]: ../samples/sample9_unittest.cc "Event listener example"
+[sample9_unittest.cc]: ../samples/sample9_unittest.cc "EventType listener example"
 
 You may append more than one listener to the list. When an `On*Start()` or
 `OnTestPartResult()` event is fired, the listeners will receive it in the order

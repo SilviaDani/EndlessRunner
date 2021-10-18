@@ -12,8 +12,8 @@
 
 Map::Map() {
     try {
-        if (!font.loadFromFile("../Fonts/arial.ttf")){
-            throw std::runtime_error("File not found: ../Fonts/arial.ttf");
+        if (!font.loadFromFile("./Fonts/arial.ttf")){
+            throw std::runtime_error("File not found: ./Fonts/arial.ttf");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -26,8 +26,8 @@ Map::Map() {
 
 
     try {
-        if (!backgroundTexture.loadFromFile("../Sprites/yoshisbackground.png")) {
-            throw std::runtime_error("File not found: ../Sprites/yoshisbackground.png");
+        if (!backgroundTexture.loadFromFile("./Sprites/yoshisbackground.png")) {
+            throw std::runtime_error("File not found: ./Sprites/yoshisbackground.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -48,8 +48,8 @@ Map::Map() {
 
 
     try {
-        if (!landTexture.loadFromFile("../Sprites/yoshisland.png")) {
-            throw std::runtime_error("File not found: ../Sprites/yoshisland.png");
+        if (!landTexture.loadFromFile("./Sprites/yoshisland.png")) {
+            throw std::runtime_error("File not found: ./Sprites/yoshisland.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -68,8 +68,8 @@ Map::Map() {
 
 
     try {
-        if (!grassTexture.loadFromFile("../Sprites/yoshisgrass.png")){
-            throw std::runtime_error("File not found: ../Sprites/yoshigrass.png");
+        if (!grassTexture.loadFromFile("./Sprites/yoshisgrass.png")){
+            throw std::runtime_error("File not found: ./Sprites/yoshigrass.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -88,8 +88,8 @@ Map::Map() {
 
 
     try {
-        if (!powerUpTexture.loadFromFile("../Sprites/block.png")) {
-            throw std::runtime_error("File not found: ../Sprites/block.png");
+        if (!powerUpTexture.loadFromFile("./Sprites/block.png")) {
+            throw std::runtime_error("File not found: ./Sprites/block.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -99,8 +99,8 @@ Map::Map() {
 
 
     try {
-        if (!coinTexture.loadFromFile("../Sprites/coin.png")) {
-            throw std::runtime_error("File not found: ../Sprites/coin.png");
+        if (!coinTexture.loadFromFile("./Sprites/coin.png")) {
+            throw std::runtime_error("File not found: ./Sprites/coin.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -110,8 +110,8 @@ Map::Map() {
 
 
     try {
-        if (!buffer.loadFromFile("../Sounds/parrySound.wav"))
-            throw std::runtime_error("File not found: ../Sounds/parrySound.wav");
+        if (!buffer.loadFromFile("./Sounds/parrySound.wav"))
+            throw std::runtime_error("File not found: ./Sounds/parrySound.wav");
         parrySound.setBuffer(buffer);
         parrySound.setLoop(false);
     }
@@ -141,7 +141,7 @@ void Map::draw(sf::RenderWindow &window){
 
     totalDistance += coveredDistance;
     if (coveredDistance >= 100)
-        notify(Game::getInstance()->getPlayer(), Event::EVENT_100DISTANCE);
+        notify(Game::getInstance()->getPlayer(), EventType::EVENT_100DISTANCE);
     distance.setString(std::to_string(coveredDistance));
     window.draw(distance);
 }
@@ -248,8 +248,9 @@ void Map::checkCollisions(Player& player) {
             else {
                 if (dynamic_cast<Yoshi *>(player.getForm())) {
                     player.kill();
+                    obstacles.clear();
                     currentScore = coveredDistance + pickedCoins;
-                    notify(player, Event::EVENT_DEATH);
+                    notify(player, EventType::EVENT_DEATH);
                     std::cerr << "sei morto" << std::endl;
                     Game::getInstance()->save();
                     if (currentScore > highscore) {
@@ -281,9 +282,9 @@ void Map::instantiateObstacle() {
     Giant* formg = dynamic_cast<Giant*>(Game::getInstance()->getPlayer().getForm());
     Bike* formb = dynamic_cast<Bike*>(Game::getInstance()->getPlayer().getForm());
     if (rndm < 50 || formg || formb)
-        tmp = obstacleFactory.factoryMethod(ObstacleList::Rocket);
+        tmp = obstacleFactory.factoryMethod(ObstacleType::Rocket);
     else
-        tmp = obstacleFactory.factoryMethod(ObstacleList::Stone);
+        tmp = obstacleFactory.factoryMethod(ObstacleType::Stone);
     obstacles.push_back(tmp);
 }
 

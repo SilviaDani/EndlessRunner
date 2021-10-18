@@ -16,7 +16,7 @@ void Subject::removeObserver(Observer *observer) {
     }
 }
 
-void Subject::notify(const Player &player, Event event) {
+void Subject::notify(const Player &player, EventType event) {
     observers.at(0)->onNotify(player, event);
     //Se ci sono più observer
   //  for (auto i : observers)

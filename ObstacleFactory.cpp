@@ -4,11 +4,11 @@
 
 #include "ObstacleFactory.h"
 
-Obstacle *ObstacleFactory::factoryMethod(ObstacleList obstacle) {
-    if (obstacle == ObstacleList::Stone){
+Obstacle *ObstacleFactory::factoryMethod(ObstacleType obstacle) {
+    if (obstacle == ObstacleType::Stone){
         return new Stone();
     }
-    else if (obstacle == ObstacleList::Rocket){
+    else if (obstacle == ObstacleType::Rocket){
         return new Rocket();
     }
     else

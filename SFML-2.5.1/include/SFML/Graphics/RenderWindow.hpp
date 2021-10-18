@@ -213,12 +213,12 @@ protected:
 /// // The main loop - ends as soon as the window is closed
 /// while (window.isOpen())
 /// {
-///    // Event processing
-///    sf::Event event;
+///    // EventType processing
+///    sf::EventType event;
 ///    while (window.pollEvent(event))
 ///    {
 ///        // Request for closing the window
-///        if (event.type == sf::Event::Closed)
+///        if (event.type == sf::EventType::Closed)
 ///            window.close();
 ///    }
 ///

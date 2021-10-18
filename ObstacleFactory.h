@@ -6,13 +6,13 @@
 #define ENDLESSRUNNER_OBSTACLEFACTORY_H
 #include "Obstacle.h"
 
-enum class ObstacleList{
+enum class ObstacleType{
     Rocket, Stone
 };
 
 class ObstacleFactory {
 public:
-    Obstacle* factoryMethod(ObstacleList obstacle);
+    Obstacle* factoryMethod(ObstacleType obstacle);
 };
 
 #endif //ENDLESSRUNNER_OBSTACLEFACTORY_H

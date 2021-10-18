@@ -10,7 +10,7 @@
 
 class Achievement{
 public:
-    Achievement(std::string title, std::string text, std::string icon = "../Sprites/trophy.png");
+    Achievement(std::string title, std::string text, std::string icon = "./Sprites/trophy.png");
     bool isUnlocked() const;
     void unlock();
     const sf::Text &getTitle() const;
@@ -29,7 +29,7 @@ private:
 
 class AchievementManager : public Observer{
 public:
-    virtual void onNotify(const Player& player, Event event);
+    virtual void onNotify(const Player& player, EventType event);
     void draw(sf::RenderWindow& window);
     const std::vector<Achievement *> &getAchUnlocked() const;
     void setAchUnlocked(Achievement *achievement);

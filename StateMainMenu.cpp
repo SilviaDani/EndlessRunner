@@ -8,8 +8,8 @@
 StateMainMenu::StateMainMenu(Game *gameptr) {
     game = gameptr;
     try {
-        if (!texture.loadFromFile("../Sprites/mainMenuBackground.jpg")){
-            throw std::runtime_error("File not found: ../Sprites/mainMenuBackground.jpg");
+        if (!texture.loadFromFile("./Sprites/mainMenuBackground.jpg")){
+            throw std::runtime_error("File not found: ./Sprites/mainMenuBackground.jpg");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -22,8 +22,8 @@ StateMainMenu::StateMainMenu(Game *gameptr) {
 
 
     try {
-        if (!font.loadFromFile("../Fonts/arial.ttf")){
-            throw std::runtime_error("File not found: ../Fonts/arial.ttf");
+        if (!font.loadFromFile("./Fonts/arial.ttf")){
+            throw std::runtime_error("File not found: ./Fonts/arial.ttf");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -38,8 +38,8 @@ StateMainMenu::StateMainMenu(Game *gameptr) {
 
 
     try {
-        if (!titleFont.loadFromFile("../Fonts/pixel.TTF")){
-            throw std::runtime_error("File not found: ../Fonts/pixel.TTF");
+        if (!titleFont.loadFromFile("./Fonts/pixel.TTF")){
+            throw std::runtime_error("File not found: ./Fonts/pixel.TTF");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -54,8 +54,8 @@ StateMainMenu::StateMainMenu(Game *gameptr) {
 
 
     try {
-        if (!buffer.loadFromFile("../Sounds/mainMenuMusic.wav"))
-            throw std::runtime_error("File not found: ../Sounds/mainMenuMusic.wav");
+        if (!buffer.loadFromFile("./Sounds/mainMenuMusic.wav"))
+            throw std::runtime_error("File not found: ./Sounds/mainMenuMusic.wav");
         mainMenuMusic.setBuffer(buffer);
         mainMenuMusic.setLoop(true);
     }

@@ -25,8 +25,8 @@ const sf::Sprite &Obstacle::getObstacleSprite() const {
 
 Rocket::Rocket() {
     try {
-        if (!obstacleTexture.loadFromFile("../Sprites/rocket.png")) {
-            throw std::runtime_error("File not found: ../Sprites/rocket.png");
+        if (!obstacleTexture.loadFromFile("./Sprites/rocket.png")) {
+            throw std::runtime_error("File not found: ./Sprites/rocket.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -58,8 +58,8 @@ void Rocket::doAction() {
 
 Stone::Stone() {
     try {
-        if (!obstacleTexture.loadFromFile("../Sprites/stone.png")) {
-            throw std::runtime_error("File not found: ../Sprites/stone.png");
+        if (!obstacleTexture.loadFromFile("./Sprites/stone.png")) {
+            throw std::runtime_error("File not found: ./Sprites/stone.png");
         }
     }
     catch (const std::runtime_error& exc) {

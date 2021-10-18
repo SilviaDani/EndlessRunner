@@ -8,8 +8,8 @@
 StateGameOver::StateGameOver(Game *gameptr) {
     game = gameptr;
     try {
-        if (!font.loadFromFile("../Fonts/arial.ttf")){
-            throw std::runtime_error("File not found: ../Fonts/arial.ttf");
+        if (!font.loadFromFile("./Fonts/arial.ttf")){
+            throw std::runtime_error("File not found: ./Fonts/arial.ttf");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -31,8 +31,8 @@ StateGameOver::StateGameOver(Game *gameptr) {
 
 
     try {
-        if (!titleFont.loadFromFile("../Fonts/pixel.TTF")){
-            throw std::runtime_error("File not found: ../Fonts/pixel.TTF");
+        if (!titleFont.loadFromFile("./Fonts/pixel.TTF")){
+            throw std::runtime_error("File not found: ./Fonts/pixel.TTF");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -47,8 +47,8 @@ StateGameOver::StateGameOver(Game *gameptr) {
 
 
     try {
-        if (!buffer.loadFromFile("../Sounds/gameOverMusic.wav"))
-            throw std::runtime_error("File not found: ../Sounds/gameOverMusic.wav");
+        if (!buffer.loadFromFile("./Sounds/gameOverMusic.wav"))
+            throw std::runtime_error("File not found: ./Sounds/gameOverMusic.wav");
         gameOverMusic.setBuffer(buffer);
         gameOverMusic.setLoop(false);
         gameOverMusic.play();

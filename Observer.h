@@ -5,14 +5,14 @@
 #ifndef ENDLESSRUNNER_OBSERVER_H
 #define ENDLESSRUNNER_OBSERVER_H
 #include "Player.h"
-enum class Event{
+enum class EventType{
     EVENT_DEATH, EVENT_100DISTANCE
 };
 
 class Observer {
 public:
     virtual ~Observer() {}
-    virtual void onNotify(const Player& player, Event event) = 0;
+    virtual void onNotify(const Player& player, EventType event) = 0;
 };
 
 

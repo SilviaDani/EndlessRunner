@@ -16,6 +16,7 @@ public:
     void playMusic() override;
     void stopMusic() override;
     float getAcceleration() const;
+    bool isSpacePressed();
 private:
     sf::Clock clock;
     sf::Clock coinClock;

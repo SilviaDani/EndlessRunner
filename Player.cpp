@@ -11,8 +11,8 @@
 Player::Player() {
     form = new Yoshi();
     try {
-        if (!buffer.loadFromFile("../Sounds/deathSound.wav"))
-            throw std::runtime_error("File not found: ../Sounds/deathSound.wav");
+        if (!buffer.loadFromFile("./Sounds/deathSound.wav"))
+            throw std::runtime_error("File not found: ./Sounds/deathSound.wav");
         deathSound.setBuffer(buffer);
         deathSound.setLoop(false);
     }
@@ -46,8 +46,8 @@ sf::FloatRect Player::getGlobalBounds() const {
     return form->getSprite().getGlobalBounds();
 }
 
-void Player::move() const {
-    form->move();
+void Player::move(bool spacePressed) const {
+    form->move(spacePressed);
 }
 
 void Player::changeForm() {
@@ -78,8 +78,8 @@ Form *Player::getForm() const {
 
 Yoshi::Yoshi(float y) {
     try {
-        if (!texture.loadFromFile("../Sprites/yoshi.png")) {
-            throw std::runtime_error("File not found: ../Sprites/yoshi.png");
+        if (!texture.loadFromFile("./Sprites/yoshi.png")) {
+            throw std::runtime_error("File not found: ./Sprites/yoshi.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -94,8 +94,8 @@ Yoshi::Yoshi(float y) {
     resetClock();
 }
 
-void Yoshi::move() {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+void Yoshi::move(bool spacePressed) {
+    if (spacePressed)
         sprite.move(0, -3.2);
     else
         sprite.move(0, 3.6);
@@ -140,8 +140,8 @@ void Yoshi::resetClock() {
 
 Yoshi::Yoshi() {
     try {
-        if (!texture.loadFromFile("../Sprites/yoshi.png")) {
-            throw std::runtime_error("File not found: ../Sprites/yoshi.png");
+        if (!texture.loadFromFile("./Sprites/yoshi.png")) {
+            throw std::runtime_error("File not found: ./Sprites/yoshi.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -159,8 +159,8 @@ Yoshi::Yoshi() {
 
 Bike::Bike(float y) {
     try {
-        if (!texture.loadFromFile("../Sprites/yoshibike.png")) {
-            throw std::runtime_error("File not found: ../Sprites/yoshibike.png");
+        if (!texture.loadFromFile("./Sprites/yoshibike.png")) {
+            throw std::runtime_error("File not found: ./Sprites/yoshibike.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -173,12 +173,12 @@ Bike::Bike(float y) {
     sprite.setScale(3,3);
 }
 
-void Bike::move() {
+void Bike::move(bool spacePressed) {
     if (sprite.getPosition().y > LHEIGHT - sprite.getGlobalBounds().height - 2)
         hasTouchedGround = true;
     if (!hasTouchedGround)
         sprite.move(0, 8);
-    if (!isJumping && sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && hasTouchedGround) {
+    if (!isJumping && spacePressed && hasTouchedGround) {
         isJumping = true;
         hasReachedTop = false;
     }
@@ -207,8 +207,8 @@ Form *Bike::nextForm() {
 
 Giant::Giant(float y) {
     try {
-        if (!bodyTexture.loadFromFile("../Sprites/bigyoshi.png")) {
-            throw std::runtime_error("File not found: ../Sprites/bigyoshi.png");
+        if (!bodyTexture.loadFromFile("./Sprites/bigyoshi.png")) {
+            throw std::runtime_error("File not found: ./Sprites/bigyoshi.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -223,8 +223,8 @@ Giant::Giant(float y) {
 
 
     try {
-        if (!tongueTexture.loadFromFile("../Sprites/yoshitongue2.png")) {
-            throw std::runtime_error("File not found: ../Sprites/yoshitongue2.png");
+        if (!tongueTexture.loadFromFile("./Sprites/yoshitongue2.png")) {
+            throw std::runtime_error("File not found: ./Sprites/yoshitongue2.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -238,8 +238,8 @@ Giant::Giant(float y) {
 
 
     try {
-        if (!texture.loadFromFile("../Sprites/yoshitongue.png")) {
-            throw std::runtime_error("File not found: ../Sprites/yoshitongue.png");
+        if (!texture.loadFromFile("./Sprites/yoshitongue.png")) {
+            throw std::runtime_error("File not found: ./Sprites/yoshitongue.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -254,8 +254,8 @@ Giant::Giant(float y) {
     sprite.setPosition(startingPosition);
 }
 
-void Giant::move() {
-   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+void Giant::move(bool spacePressed) {
+   if (spacePressed) {
           if (sprite.getPosition().y > bodySprite.getGlobalBounds().top + 100) {
           sprite.setPosition(sprite.getPosition().x + (sprite.getPosition().y < bodySprite.getGlobalBounds().top + bodySprite.getGlobalBounds().height / 2 ? -0.5f : 0.5f),
                              sprite.getPosition().y - 1.f);
@@ -295,8 +295,8 @@ AnimatedSprite Giant::getBodySprite(){
 
 GravityInverter::GravityInverter(float y) {
     try {
-        if (!texture.loadFromFile("../Sprites/spaceyoshi.png")) {
-            throw std::runtime_error("File not found: ../Sprites/spaceyoshi.png");
+        if (!texture.loadFromFile("./Sprites/spaceyoshi.png")) {
+            throw std::runtime_error("File not found: ./Sprites/spaceyoshi.png");
         }
     }
     catch (const std::runtime_error& exc) {
@@ -311,7 +311,7 @@ GravityInverter::GravityInverter(float y) {
     sprite.setOrigin(sprite.getOrigin().x, sprite.getOrigin().y + sprite.getLocalBounds().height/2);
 }
 
-void GravityInverter::move() {
+void GravityInverter::move(bool spacePressed) {
     sprite.move(0, gravity);
 }
 

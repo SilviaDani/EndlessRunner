@@ -22,27 +22,55 @@ TEST(player_testing, player_state){
         player.changeForm();
     }
     ASSERT_TRUE((nGravityInverter + 3 <= nBike || nGravityInverter - 3 <= nBike) && (nBike + 3 <= nGiant || nBike - 3 <= nGiant)
-        && (nGiant + 3 <= nGravityInverter || nGiant - 3 <= nGravityInverter));
+                && (nGiant + 3 <= nGravityInverter || nGiant - 3 <= nGravityInverter));
 }
 
 TEST(map_testing, collisions){
     Map map;
     Player player;
+    float posX = player.getPosition().x;
+    float posY = player.getPosition().y;
     AchievementManager* am = new AchievementManager();
     map.addObserver(am); //need this and the previous line in order to use correctly "checkCollisions" method
 
     //COIN
+    map.instantiateCoin();
+    ASSERT_EQ(map.getCoins().size(), 1);
+    map.setPositionCoin(0, posX, map.getCoins().at(0).getPosition().y);
+    while (!player.getGlobalBounds().intersects(map.getCoins().at(0).getGlobalBounds())){
+        player.move(true);
+    }
+    map.checkCollisions(player);
+    EXPECT_EQ(map.getPickedCoins(), 1);
+    ASSERT_EQ(map.getCoins().size(), 0);
+
     map.instantiateCoin();
     player.setPosition(0,0);
     ASSERT_EQ(map.getCoins().size(), 1);
     map.setPositionCoin(0, 0, 0);
     EXPECT_TRUE(player.getGlobalBounds().intersects(map.getCoins().at(0).getGlobalBounds()));
     map.checkCollisions(player);
-    EXPECT_EQ(map.getPickedCoins(), 1);
+    EXPECT_EQ(map.getPickedCoins(), 2);
+    ASSERT_EQ(map.getCoins().size(), 0);
 
-    player.setPosition(0,0);
     //POWER UP
     sf::Clock clock;
+
+    player.setPosition(posX, posY);
+    while (clock.getElapsedTime().asSeconds()<=5){}
+    map.instantiatePowerUp(player);
+    ASSERT_EQ(map.getPowerUp().size(), 1);
+    map.setPowerUpPosition(posX, map.getPowerUp().at(0).getPosition().y);
+    while (!player.getGlobalBounds().intersects(map.getPowerUp().at(0).getGlobalBounds())){
+        player.move(true);
+    }
+    map.checkCollisions(player);
+    EXPECT_TRUE(dynamic_cast<Giant*>(player.getForm()) || dynamic_cast<Bike*>(player.getForm()) || dynamic_cast<GravityInverter*>(player.getForm()));
+    ASSERT_EQ(map.getPowerUp().size(), 0);
+    player.changeForm();
+    clock.restart();
+
+    player.setPosition(0,0);
     while (clock.getElapsedTime().asSeconds()<=5){}
     map.instantiatePowerUp(player);
     ASSERT_EQ(map.getPowerUp().size(), 1);
@@ -50,9 +78,23 @@ TEST(map_testing, collisions){
     EXPECT_TRUE(player.getGlobalBounds().intersects(map.getPowerUp().at(0).getGlobalBounds()));
     map.checkCollisions(player);
     EXPECT_TRUE(dynamic_cast<Giant*>(player.getForm()) || dynamic_cast<Bike*>(player.getForm()) || dynamic_cast<GravityInverter*>(player.getForm()));
+    ASSERT_EQ(map.getPowerUp().size(), 0);
     player.changeForm();
 
     //OBSTALCE
+    map.instantiateObstacle();
+    ASSERT_EQ(map.getObstacles().size(), 1);
+    player.setPosition(posX,posY);
+    map.getObstacles().at(0)->setPosition(posX, map.getObstacles().at(0)->getObstacleSprite().getPosition().y);
+    while (!player.getGlobalBounds().intersects(map.getObstacles().at(0)->getObstacleSprite().getGlobalBounds())){
+        player.move(true);
+    }
+    map.checkCollisions(player);
+    ASSERT_FALSE(player.isAlive());
+    ASSERT_EQ(map.getObstacles().size(), 0);
+
+    player.reset();
+    ASSERT_TRUE(player.isAlive());
     map.instantiateObstacle();
     ASSERT_EQ(map.getObstacles().size(), 1);
     player.setPosition(0,0);
@@ -60,6 +102,7 @@ TEST(map_testing, collisions){
     ASSERT_TRUE(player.getGlobalBounds().intersects(map.getObstacles().at(0)->getObstacleSprite().getGlobalBounds()));
     map.checkCollisions(player);
     ASSERT_FALSE(player.isAlive());
+    ASSERT_EQ(map.getObstacles().size(), 0);
 }
 
 
