@@ -36,10 +36,13 @@ TEST(map_testing, collisions){
     //COIN
     map.instantiateCoin();
     ASSERT_EQ(map.getCoins().size(), 1);
-    map.setPositionCoin(0, posX, map.getCoins().at(0).getPosition().y);
-    while (!player.getGlobalBounds().intersects(map.getCoins().at(0).getGlobalBounds())){
+    while (player.getPosition().y >= map.getCoins().at(0).getPosition().y){
         player.move(true);
     }
+    while (map.getCoins().at(0).getPosition().x >= player.getPosition().x){
+        map.moveCoin();
+    }
+    EXPECT_TRUE(player.getGlobalBounds().intersects(map.getCoins().at(0).getGlobalBounds()));
     map.checkCollisions(player);
     EXPECT_EQ(map.getPickedCoins(), 1);
     ASSERT_EQ(map.getCoins().size(), 0);
@@ -60,10 +63,13 @@ TEST(map_testing, collisions){
     while (clock.getElapsedTime().asSeconds()<=5){}
     map.instantiatePowerUp(player);
     ASSERT_EQ(map.getPowerUp().size(), 1);
-    map.setPowerUpPosition(posX, map.getPowerUp().at(0).getPosition().y);
-    while (!player.getGlobalBounds().intersects(map.getPowerUp().at(0).getGlobalBounds())){
+    while (player.getPosition().y >= map.getPowerUp().at(0).getPosition().y){
         player.move(true);
     }
+    while (map.getPowerUp().at(0).getPosition().x >= player.getPosition().x){
+        map.movePowerUp();
+    }
+    EXPECT_TRUE(player.getGlobalBounds().intersects(map.getPowerUp().at(0).getGlobalBounds()));
     map.checkCollisions(player);
     EXPECT_TRUE(dynamic_cast<Giant*>(player.getForm()) || dynamic_cast<Bike*>(player.getForm()) || dynamic_cast<GravityInverter*>(player.getForm()));
     ASSERT_EQ(map.getPowerUp().size(), 0);
@@ -86,9 +92,13 @@ TEST(map_testing, collisions){
     ASSERT_EQ(map.getObstacles().size(), 1);
     player.setPosition(posX,posY);
     map.getObstacles().at(0)->setPosition(posX, map.getObstacles().at(0)->getObstacleSprite().getPosition().y);
-    while (!player.getGlobalBounds().intersects(map.getObstacles().at(0)->getObstacleSprite().getGlobalBounds())){
+    while (player.getPosition().y >= map.getObstacles().at(0)->getObstacleSprite().getPosition().y){
         player.move(true);
     }
+    while (map.getObstacles().at(0)->getObstacleSprite().getPosition().x >= player.getPosition().x){
+        map.moveObstacle();
+    }
+    EXPECT_TRUE(player.getGlobalBounds().intersects(map.getObstacles().at(0)->getObstacleSprite().getGlobalBounds()));
     map.checkCollisions(player);
     ASSERT_FALSE(player.isAlive());
     ASSERT_EQ(map.getObstacles().size(), 0);
