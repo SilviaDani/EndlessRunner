@@ -213,7 +213,6 @@ void Map::checkCollisions(Player& player) {
     }
     for (auto k : powerUpSprite){
         if (player.getGlobalBounds().intersects(k.getGlobalBounds())) {
-            std::cout << "power up" << std::endl;
             powerUpSprite.pop_back();
             player.changeForm();
             obstacles.clear();
@@ -221,7 +220,6 @@ void Map::checkCollisions(Player& player) {
     }
     for (int i = 0; i<coins.size(); i++){
         if (player.getGlobalBounds().intersects(coins.at(i).getGlobalBounds())) {
-            std::cout << "coin" << std::endl;
             coins.erase(coins.begin() + i);
             pickedCoins++;
         }
@@ -238,7 +236,6 @@ void Map::checkCollisions(Player& player) {
         if (player.getGlobalBounds().intersects(i->getObstacleSprite().getGlobalBounds())) {
             if (form) {
                 parrySound.play();
-                std::cerr << "hai parato un missile" << std::endl;
                 for (int n = 0; n<obstacles.size(); n++) {
                     if (player.getGlobalBounds().intersects(obstacles.at(n)->getObstacleSprite().getGlobalBounds())) {
                         obstacles.erase(obstacles.begin() + n);
@@ -251,11 +248,9 @@ void Map::checkCollisions(Player& player) {
                     obstacles.clear();
                     currentScore = coveredDistance + pickedCoins;
                     notify(player, EventType::EVENT_DEATH);
-                    std::cerr << "sei morto" << std::endl;
                     Game::getInstance()->save();
                     if (currentScore > highscore) {
                         highscore = currentScore;
-                        std::cerr << "new highscore!!"<< currentScore << std::endl;
                     }
                 }
                 else {

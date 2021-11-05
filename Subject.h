@@ -8,11 +8,11 @@
 
 class Subject {
 public:
-    void addObserver(Observer* observer);
-    void removeObserver(Observer* observer);
+    virtual void addObserver(Observer* observer);
+    virtual void removeObserver(Observer* observer);
 protected:
     std::vector<Observer*> observers;
-    void notify(const Player& player, EventType event);
+    virtual void notify(const Player& player, EventType event);
 };
 
 

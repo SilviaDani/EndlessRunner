@@ -15,8 +15,6 @@ public:
     void playMusic() override;
     void stopMusic() override;
 private:
-   // sf::Sprite sprite;
-   // sf::Texture texture;
     sf::Font font;
     sf::Font titleFont;
     sf::Text title;

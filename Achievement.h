@@ -29,7 +29,7 @@ private:
 
 class AchievementManager : public Observer{
 public:
-    virtual void onNotify(const Player& player, EventType event);
+    void onNotify(const Player& player, EventType event) override;
     void draw(sf::RenderWindow& window);
     const std::vector<Achievement *> &getAchUnlocked() const;
     void setAchUnlocked(Achievement *achievement);

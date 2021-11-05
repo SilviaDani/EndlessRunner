@@ -40,6 +40,7 @@ public:
     std::vector<sf::Sprite> getPowerUp() const;
     void setPowerUpPosition(float x, float y);
     int getPickedCoins() const;
+
 private:
     sf::Texture backgroundTexture;
     std::vector <sf::Sprite>backgroundSprites;
